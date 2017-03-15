@@ -1,0 +1,382 @@
+#include "xfea.h"
+
+#include "module/bgraph.h";
+
+#define VIEW_TEX_RET_OK         0
+#define VIEW_TEXT_RET_QUIT      1
+#define VIEW_TEXT_RET_FINISH    2
+
+#define VIEW_RET_OK             0
+#define VIEW_RET_QUIT           1
+#define VIEW_RET_FINISH         2
+#define VIEW_RET_INPUT          3
+
+#define VIEW_MSG_FOCUS_PREV     '2'
+#define VIEW_MSG_FOCUS_NEXT     '8'
+#define VIEW_MSG_BACK           '*'
+#define VIEW_MSG_ENTER          '#'
+#define VIEW_MSG_TIMEOUT        0x80
+
+extern BGRAPH graphMain;
+
+void layout_show(VIEW_Layout *layout);
+void list_show(VIEW_List *list);
+void button_click(VIEW_Button *button);
+
+void view_click_handler(XF_Info *info);
+
+void stateCreateEntry();
+void stateDestroyEntry();
+
+int stateWaitProcessMsg(XF_Message msg);
+int stateInputProcessMsg(XF_Message msg);
+
+
+static VIEW_Layout *mView = 0;
+static CONTROLLER_Interface *mController = 0;
+
+
+XF_Action actViewClick = {
+    "view click",
+    view_click_handler,
+};
+
+static XF_State stateCreate = {
+    stateCreateEntry,
+    0,
+    0,
+};
+
+static XF_State stateDestroy = {
+    0,
+    0,
+    0,
+};
+
+static XF_State stateWait = {
+    0,
+    0,
+    stateWaitProcessMsg,
+};
+
+static XF_State stateInput = {
+    0,
+    0,
+    stateInputProcessMsg,
+};
+
+static XF_State *states[] = {&stateCreate, &stateDestroy, &stateWait, &stateInput};
+
+static XF_StateMachine viewMach = {
+    states,
+    sizeof(states) / sizeof(states[0]),
+    &stateCreate,
+};
+
+static uint8_t text_show(VIEW_Text *text) {
+    uint8_t x = 0, y = 0;
+    bgraph_get_pos(&graphMain, &x, &y);
+    bgraph_set_text(&graphMain, x, y, text->super.buffer);
+
+    return VIEW_RET_OK;
+}
+
+static uint8_t text_clear(VIEW_Text *text) {
+    *(text->super.buffer + 0) = '\0';
+    return VIEW_RET_OK;
+}
+
+static uint8_t text_backward(VIEW_Text *text) {
+    uint8_t x = 0, y = 0, len = 0;
+    char str[2] = {0, 0};
+    len = strlen(text->super.buffer);
+
+    //更新text
+    len--;
+    *(text->super.buffer + len) = '\0';
+
+    //更新界面
+    if(text->backward) {
+        str[0] = text->backwards;
+    } else {
+        str[0] = '_';
+    }
+
+    bgraph_get_pos(&graphMain, &x, &y);
+    bgraph_set_text(&graphMain, x + (len + 1)*graphMain.pixelOfCharX, y, str);
+
+    if(len <= 0) return VIEW_RET_QUIT;
+    return VIEW_RET_OK;
+}
+
+static uint8_t text_forward(VIEW_Text *text, char ch) {
+    uint8_t x = 0, y = 0, len = 0;
+    char str[2] = {0, 0};
+    len = strlen(text->super.buffer);
+
+    //更新text
+    *(text->super.buffer + len) = ch;
+    len++;
+    *(text->super.buffer + len) = '\0';
+
+    //更新界面
+    if(text->forward) {
+        str[0] = text->forward;
+    } else {
+        str[0] = ch;
+    }
+
+    bgraph_get_pos(&graphMain, &x, &y);
+    bgraph_set_text(&graphMain, x + (len - 1)*graphMain.pixelOfCharX, y, str);
+
+    if(len >= text->size) return VIEW_RET_FINISH;
+
+    return VIEW_RET_OK;
+}
+
+static uint8_t view_process_uint(VIEW_Unit *uint) {
+    switch(uint->type) {
+        case VIEW_TYPE_LAYOUT: {
+            layout_show((VIEW_Layout *)uint);
+            break;
+        }
+        case VIEW_TYPE_LIST: {
+            list_show((VIEW_List *)uint);
+            break;
+        }
+        case VIEW_TYPE_BUTTON: {
+            button_click((VIEW_Button *)uint);
+        }
+    }
+
+    return VIEW_RET_OK;
+}
+
+static void view_focus_uint(VIEW_Unit *uint) {
+    uint8_t x = 0, y = 0;
+    switch(uint->type) {
+        case VIEW_TYPE_LAYOUT: {
+            layout_focus((VIEW_Layout *)uint);
+            break;
+        }
+        case VIEW_TYPE_LIST: {
+            list_show((VIEW_List *)uint);
+            break;
+        }
+        case VIEW_TYPE_BUTTON: {
+            button_focus((VIEW_Button *)uint);
+        }
+    }
+
+    return VIEW_RET_OK;
+}
+
+static uint8_t view_focus_prev(VIEW_Layout *layout) {
+    VIEW_Unit *focus = layout->children[layout->posChlid];
+    uint8_t x = 0, y = 0;
+    uint8_t i = 0;
+    if(0 >= layout->posChlid) return VIEW_RET_QUIT;  //不需要更新
+
+    //获取当前光标
+    bgraph_get_pos(&graphMain, &x, &y);
+
+    //取消选中
+    bgraph_set_text(&graphMain, x, y, focus->buffer, BGRAPH_COLOR_WHITE);
+    layout->posChlid--;
+
+    //重新选中
+    if(y <= layout->super.point.y) {  //已到显示顶部
+        uint8_t posChild = layout->posChild;
+        VIEW_Unit *uint = layout->children[layout->posChild];
+
+        bgraph_set_text(&graphMain, x, y,uint->buffer, BGRAPH_COLOR_BLACK);
+        for(i = y + graphMain.pixelOfCharY; i < graphMain.pixelHeight; i = i + graphMain.pixelOfCharY) {
+            posChild++;
+            uint = layout->children[posChild];
+            bgraph_set_text(&graphMain, x, i,uint->buffer, BGRAPH_COLOR_WHITE);
+        }
+    } else {
+        uint8_t posChild = layout->posChild;
+        VIEW_Unit *uint = layout->children[layout->posChild];
+        y = y - graphMain.pixelOfCharY;
+        bgraph_set_pos(&graphMain, x, y);
+        bgraph_set_text(&graphMain, x, i,uint->buffer, BGRAPH_COLOR_BLACK);
+    }
+
+    return VIEW_RET_OK;
+}
+
+static uint8_t view_focus_next(VIEW_Layout *layout) {
+    VIEW_Unit *focus = layout->children[layout->posChlid];
+    uint8_t x = 0, y = 0;
+    uint8_t i = 0;
+    if(layout->sizeChildren <= layout->posChlid) return VIEW_RET_QUIT;  //不需要更新
+
+    //获取当前光标
+    bgraph_get_pos(&graphMain, &x, &y);
+
+    //取消选中
+    bgraph_set_text(&graphMain, x, y, focus->buffer, BGRAPH_COLOR_WHITE);
+    layout->posChlid++;
+
+    //重新选中
+    if((y + graphMain.pixelOfCharY) >= (layout->super.point.y + layout->size.y)) {  //已到显示底部
+        uint8_t posChild = layout->posChild;
+        VIEW_Unit *uint = layout->children[layout->posChild];
+
+        for(i = y; i < graphMain.pixelHeight - graphMain.pixelOfCharY; i = i + graphMain.pixelOfCharY) {
+            posChild++;
+            uint = layout->children[posChild];
+            bgraph_set_text(&graphMain, x, i,uint->buffer, BGRAPH_COLOR_WHITE);
+        }
+        posChild++;
+        uint = layout->children[posChild];
+        bgraph_set_text(&graphMain, x, i,uint->buffer, BGRAPH_COLOR_BLACK);
+    } else {
+        uint8_t posChild = layout->posChild;
+        VIEW_Unit *uint = layout->children[layout->posChild];
+        y = y + graphMain.pixelOfCharY;
+        bgraph_set_pos(&graphMain, x, y);
+        bgraph_set_text(&graphMain, x, i,uint->buffer, BGRAPH_COLOR_BLACK);
+    }
+
+    return VIEW_RET_OK;
+}
+
+static void view_backward(VIEW_Layout *layout) {
+    view_process_uint(layout->children[layout->posChlid]);
+}
+
+static void view_forward(VIEW_Layout *layout) {
+    VIEW_Unit *uint = layout->children[layout->posChlid];
+    switch(uint->type) {
+        case VIEW_TYPE_LAYOUT: {
+            layout_show((VIEW_Layout *)uint);
+            break;
+        }
+        case VIEW_TYPE_LIST: {
+            list_show((VIEW_List *)uint);
+            break;
+        }
+        case VIEW_TYPE_BUTTON: {
+            button_click((VIEW_Button *)uint);
+        }
+        default: {
+            view_focus_next(layout);
+        }
+    }
+}
+
+
+static void view_click_handler(XF_Info *info) {
+    char ch = 0;
+    ch = *(char *)(info->data);
+    XF_Message msg = {0};
+    msg.what = ch;
+    XF_SMachSendMessage(&viewMach, &msg);
+}
+
+static void stateCreateEntry() {
+    layout_show(mView);
+    XF_SMachTransitiveTo(&viewMach, &stateWait);
+}
+
+static void stateDestroyEntry() {
+    bgraph_clear(&graphMain);
+}
+
+static void stateWaitEntry() {
+    //XF_Message msg = {VIEW_MSG_FOCUS_NEXT};
+    //XF_SMachSendMessage(&viewMach, &msg);
+}
+
+static int stateWaitProcessMsg(XF_Message *msg) {
+    switch(msg->what) {
+        case VIEW_MSG_FOCUS_PREV: {
+            if(VIEW_RET_INPUT == view_focus_prev(mView)) {
+                XF_SMachTransitiveTo(&viewMach, &stateInput);
+            }
+            break;
+        }
+        case VIEW_MSG_FOCUS_NEXT: {
+            if(VIEW_RET_INPUT == view_focus_next(mView)) {
+                XF_SMachTransitiveTo(&viewMach, &stateInput);
+            }
+            break;
+        }
+        case VIEW_MSG_BACK: {
+            view_backward(mView);
+            break;
+        }
+        case VIEW_MSG_ENTER: {
+            view_forward(mView);
+            XF_SMachTransitiveTo(&viewMach, &stateCreate);
+            break;
+        }
+        case VIEW_MSG_TIMEOUT: {
+            XF_SMachTransitiveTo(&viewMach, &stateDestroy);
+            break;
+        }
+    }
+    return 0;
+}
+
+static int stateInputProcessMsg(XF_Message *msg) {
+    switch(msg->what) {
+        case VIEW_MSG_BACK: {
+            if(VIEW_RET_QUIT == text_backward(mView->children[mView->posChild])) {
+                //mView->posChild--;
+                XF_SMachTransitiveTo(&viewMach, &stateWait);
+                XF_Message m = {VIEW_MSG_FOCUS_PREV};
+                XF_SMachSendMessage(&viewMach, &m);
+            }
+            break;
+        }
+        case VIEW_MSG_ENTER: {
+            //mView->posChild++;
+            XF_SMachTransitiveTo(&viewMach, &stateWait);
+            XF_Message m = {VIEW_MSG_FOCUS_NEXT};
+            XF_SMachSendMessage(&viewMach, &m);
+            break;
+        }
+        default: {
+            if(VIEW_RET_FINISH == text_forward(mView->children[mView->posChild], msg->what)) {
+                //mView->posChild++;
+                XF_SMachTransitiveTo(&viewMach, &stateWait);
+                XF_Message m = {VIEW_MSG_FOCUS_NEXT};
+                XF_SMachSendMessage(&viewMach, &m);
+            }
+        }
+    }
+
+    return 0;
+}
+
+int ViewStart(VIEW_Layout *layout, CONTROLLER_Interface *ctrlif) {
+}
+
+void ViewShow(VIEW_Layout *layout) {
+    mView = layout;
+    XF_SMachInitState(&viewMach, &stateCreate);
+}
+
+static void layout_show(VIEW_Layout *layout) {
+    mView = layout;
+    uint8_t i = 0, pos = 0;
+    uint8_t size = (layout->sizeUints > graphMain.charHeight) ? graphMain.charHeight : layout->sizeUints;
+    if(layout->init) layout->init();
+    while(pos < size) {
+        VIEW_Unit *uint = layout->uints[i++];
+        if(VIEW_VISIBALE_FALSE == uint->visible) continue;
+        bgraph_set_text(&graphMain, uint->point.x, uint->point.y, uint->buffer);
+        pos++;
+    }
+}
+
+static void list_show(VIEW_List *list) {
+}
+
+static void button_click(VIEW_Button *button) {
+    if(0 == button->click) return;
+    button->click(0);
+}
