@@ -19,7 +19,7 @@ typedef struct {
     unsigned int (*execute)(void *result, void *inputStream, unsigned int size);
 } XF_HttpdJsonIf;
 
-extern void XF_HttpdInit(const XF_HttpdSockIf *sockIf, const XF_HttpdFsIf *fsIf, const XF_HttpdJsonIf *jsonIf);
+extern void XF_HttpdInit(const void *webroot, const XF_HttpdSockIf *sockIf, const XF_HttpdFsIf *fsIf, const XF_HttpdJsonIf *jsonIf);
 extern void XF_HttpdAcceptRequest(XF_HttpSock client);
 
 #endif
