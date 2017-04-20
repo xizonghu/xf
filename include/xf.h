@@ -1,13 +1,8 @@
-#ifndef __XF_CONF_H__
-#define __XF_CONF_H__
+#include "../module/xffifobuffer/xffifobuffer.h"
 
-typedef char int8_t;
-typedef unsigned char uint8_t;
-//typedef enum {
-//    false = (char)0,
-//    true,
-//} bool;
+#ifndef __XF_H__
+#define __XF_H__
 
-typedef uint8_t XF_Memory;
+//typedef uint8_t XF_Memory;
 
 #endif
