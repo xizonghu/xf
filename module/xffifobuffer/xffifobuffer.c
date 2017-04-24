@@ -10,14 +10,14 @@ void XF_FIFOBufferInit(XF_FIFOBuffer *fifoBuffer, void *buffer, uint16 size) {
     fifoBuffer->postTail = 0;
     fifoBuffer->buffer = buffer;
     fifoBuffer->sizeBuffer = size;
-    fifoBuffer->state = XF_FIFOBUFFER_STATE_RUN;
+    fifoBuffer->state = XF_FIFOBUFFER_STATE_IDLE;
 }
 
-uint16 XF_FIFOBufferLoadSize(XF_FIFOBuffer *fifoBuffer) {
+uint16 XF_FIFOBufferUsedSize(XF_FIFOBuffer *fifoBuffer) {
     return (fifoBuffer->posHead > fifoBuffer->postTail) ? (fifoBuffer->sizeBuffer - fifoBuffer->posHead + fifoBuffer->postTail) : (fifoBuffer->postTail - fifoBuffer->posHead);
 }
 
-uint16 XF_FIFOBufferUnloadSize(XF_FIFOBuffer *fifoBuffer) {
+uint16 XF_FIFOBufferUnusedSize(XF_FIFOBuffer *fifoBuffer) {
     return (fifoBuffer->posHead <= fifoBuffer->postTail) ? (fifoBuffer->sizeBuffer - fifoBuffer->postTail + fifoBuffer->posHead) : (fifoBuffer->posHead - fifoBuffer->postTail);
 }
 
@@ -28,7 +28,8 @@ uint16 XF_FIFOBufferRead(XF_FIFOBuffer *fifoBuffer, void *data, uint16 size) {
 	uint16 sizeCnt = 0;
     uint16 sizeTemp = 0;
 
-    if (fifoBuffer->state != XF_FIFOBUFFER_STATE_RUN) return 0;
+    //while (fifoBuffer->state == XF_FIFOBUFFER_STATE_BUSY);
+    //fifoBuffer->state = XF_FIFOBUFFER_STATE_BUSY;
 
     sizeTemp = fifoBuffer->sizeBuffer - fifoBuffer->posHead;
     if (sizeTemp < sizeRead) {
@@ -48,6 +49,8 @@ uint16 XF_FIFOBufferRead(XF_FIFOBuffer *fifoBuffer, void *data, uint16 size) {
     fifoBuffer->posHead = (fifoBuffer->posHead + sizeTemp) % fifoBuffer->sizeBuffer;
     sizeCnt += sizeTemp;
 
+    //fifoBuffer->state = XF_FIFOBUFFER_STATE_IDLE;
+
     return sizeCnt;
 }
 
@@ -58,7 +61,8 @@ uint16 XF_FIFOBufferWrite(XF_FIFOBuffer *fifoBuffer, void *data, uint16 size) {
     uint16 sizeTemp = 0;
     uint8 overflow = (sizeWrite >= sizeFifo) ? 1 : 0;  //覆盖标志
 
-    if (fifoBuffer->state != XF_FIFOBUFFER_STATE_RUN) return 0;
+    //while (fifoBuffer->state == XF_FIFOBUFFER_STATE_BUSY);
+    //fifoBuffer->state = XF_FIFOBUFFER_STATE_BUSY;
 
     //
     //if ((fifoBuffer->posHead == fifoBuffer->postTail) && (sizeWrite > 0)) {
@@ -81,6 +85,8 @@ uint16 XF_FIFOBufferWrite(XF_FIFOBuffer *fifoBuffer, void *data, uint16 size) {
 
     //数据被覆盖
     if(overflow) fifoBuffer->posHead = (fifoBuffer->postTail + 1) % fifoBuffer->sizeBuffer;
+
+    //fifoBuffer->state = XF_FIFOBUFFER_STATE_IDLE;
 
     return sizeCnt;
 }
