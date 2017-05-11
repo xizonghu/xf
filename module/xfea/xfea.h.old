@@ -5,17 +5,17 @@
 //
 //typedef void *XF_Info;
 
-typedef struct XF_EVENT_INFO_S{
-    uint8 id;
-    void *arg;
-} XF_EventInfo;
+typedef struct {
+    void *data;
+    int size;
+} XF_Info;
 
 typedef void (*XF_action_handler_callback)(XF_Info *info);
 
 typedef struct {
     const char *name;
     XF_action_handler_callback handler;
-} XF_EventHandler;
+} XF_Action;
 
 typedef enum {
     XF_EVENY_TYPE_INTERRUPT = (uint8)1,

@@ -1,18 +1,18 @@
-#include "xftype.h"
+#include "xftypedef.h"
 #include "xfmalloc.h"
 
-typedef uint8_t addr;
+typedef uint8 addr;
 
 struct mem_control_block {
-    uint8_t is_available;
-    uint8_t size;
+    uint8 is_available;
+    uint8 size;
 };
 
-static uint8_t memory_poll[XF_MALLOC_SIZE];
-static int16_t memory_avaliable = XF_MALLOC_SIZE;
-static uint16_t memory_counter = 0;
+static uint8 memory_poll[XF_MALLOC_SIZE];
+static int16 memory_avaliable = XF_MALLOC_SIZE;
+static uint16 memory_counter = 0;
 
-static uint8_t has_initialized = 0;
+static uint8 has_initialized = 0;
 static addr *managed_memory_start;
 static addr *last_valid_address;
 
@@ -22,7 +22,7 @@ static void malloc_init() {
     has_initialized = 1;
 }
 
-void *XF_malloc(uint8_t numbytes) {
+void *XF_malloc(uint8 numbytes) {
     addr *current_location;
     struct mem_control_block *current_location_mcb;
     addr *memory_location;
@@ -67,6 +67,7 @@ void *XF_malloc(uint8_t numbytes) {
     memory_location = memory_location + sizeof(struct mem_control_block);
 
     memory_counter += numbytes;
+    //printf("xfmalloc: %d\n", memory_counter);
 
     return memory_location;
 }
@@ -80,6 +81,7 @@ void XF_free(void *firstbyte) {
     if(0 == mcb->is_available) mcb->is_available = 1;
 
     memory_counter -= mcb->size;
+    //printf("xffree: %d\n", memory_counter);
 
     return;
 }

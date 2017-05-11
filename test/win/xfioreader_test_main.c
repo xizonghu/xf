@@ -124,7 +124,8 @@ int main() {
 	 struct sockaddr_in client_name;
 	 int client_name_len = sizeof(client_name);
 	 int i = 0;
-
+typedef union{ int ia; char c[4]; short int s[2]; }untest; untest un;  un.c[0]=0xAA;un.c[1]=0xBB; un.c[2]=0xCC;un.c[3]=0xDD; 
+printf("%x,%x",un.ia, un.s[0]);
 	InitSock2();
 	 server_sock = startup(port);
 	 printf("port %d\n", port);

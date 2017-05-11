@@ -1,4 +1,4 @@
-#include "xftypedef.h"
+ï»¿#include "xftypedef.h"
 
 #include "xfsa.h"
 
@@ -6,7 +6,7 @@
 
 typedef struct XF_Signal_s {
     XF_SignalId id;
-    uint8 posAction;  //Ö¸Ïò¿ÕÎ»ÖÃ
+    uint8 posAction;  //æŒ‡å‘ç©ºä½ç½®
     uint8 sizeAction;
     XF_SignalState state;
     const XF_SignalAction **queueAction;

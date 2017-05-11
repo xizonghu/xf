@@ -1,6 +1,8 @@
 #ifndef __XF_TYPEDEF_H__
 #define __XF_TYPEDEF_H__
 
+#define XF_NULL     0
+
 typedef signed char int8;  
 typedef unsigned char   uint8;  
 typedef short  int16;  

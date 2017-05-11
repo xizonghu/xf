@@ -1,4 +1,4 @@
-#include <string.h>
+ï»¿#include <string.h>
 
 #include "xftypedef.h"
 #include "xffifo.h"
@@ -42,7 +42,7 @@ uint16 XF_FIFOWrite(XF_Fifo *fifo, void *item) {
     memcpy((char*)fifo->bufItems + fifo->postTail * fifo->sizeItem, (char*)item, fifo->sizeItem);
     fifo->postTail = (fifo->postTail + 1) % fifo->countItem;
 
-    //Êý¾Ý±»¸²¸Ç
+    //æ•°æ®è¢«è¦†ç›–
     if(fifo->posHead == fifo->postTail) fifo->posHead = (fifo->postTail + 1) % fifo->countItem;
 
     return 1;

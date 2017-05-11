@@ -1,5 +1,5 @@
-#ifndef __VIEW_H__
-#define __VIEW_H__
+#ifndef __XF_VIEW_H__
+#define __XF_VIEW_H__
 
 #define UNIT_NEW(x, y, type, data)                       {{x, y}, type, data, VIEW_VISIBALE_TRUE}
 #define LABEL_NEW(x, y, data)                            {UNIT_NEW(x, y, VIEW_TYPE_LABEL, data)}

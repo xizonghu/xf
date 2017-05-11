@@ -1,8 +1,8 @@
-#ifndef __XF_FIFOBUFFER_H__
+ï»¿#ifndef __XF_FIFOBUFFER_H__
 #define __XF_FIFOBUFFER_H__
 
-//FIFOBufferÂúÊ±£¬½«¸²¸Ç¾ÉÊý¾Ý
-//±¾Ä£ÐÍÖ»±£Ö¤¶ÁÈ¡Êý¾Ý°üµÄÍêÕûÐÔ£¬Êý¾ÝÐ£ÑéÐèÔÚprocessDataÖÐ×ÔÐÐÍê³É¡£
+//FIFOBufferæ»¡æ—¶ï¼Œå°†è¦†ç›–æ—§æ•°æ®
+//æœ¬æ¨¡åž‹åªä¿è¯è¯»å–æ•°æ®åŒ…çš„å®Œæ•´æ€§ï¼Œæ•°æ®æ ¡éªŒéœ€åœ¨processDataä¸­è‡ªè¡Œå®Œæˆã€‚
 
 typedef enum {
     XF_FIFOBUFFER_STATE_NONE,
