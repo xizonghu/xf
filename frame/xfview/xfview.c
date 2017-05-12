@@ -13,7 +13,7 @@ static void XF_ViewCreateLayout(XF_VIEW_Layout *layout) {
 }
 
 static void XF_ViewDestroyLayout(XF_VIEW_Layout *layout) {
-    XF_VIEW_LayoutDeleteUnits(layout);
+    //XF_VIEW_LayoutDeleteUnits(layout);
     if (layout->onDestroy) layout->onDestroy(layout);
 }
 
