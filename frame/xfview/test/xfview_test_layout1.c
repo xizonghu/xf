@@ -15,6 +15,7 @@ static XF_VIEW_Text *textStorage2;
 static XF_VIEW_Button *buttonStorage1;
 
 static int onBbuttonStorage(void *arg) {
+    return 0;
 }
 
 static void onCreate(XF_VIEW_Layout *layout) {
@@ -67,6 +68,7 @@ static XF_VIEW_Layout layout = {
     onShow,
     onHide,
     onDestroy,
+    "storage"
 };
 
 XF_VIEW_Layout *layoutTest1 = &layout;  //XF_VIEW_LayoutNew(7, onLoad, onUnload);

@@ -4,82 +4,63 @@
 #include "xflayout.h"
 #include "xfview.h"
 
-
-
 static XF_VIEW_Layout *mViewLayout;
+static void view_process_msg(XF_VIEW_Layout *layout, XF_VIEW_UnitMessage *msg);
 
 static void XF_ViewCreateLayout(XF_VIEW_Layout *layout) {
+    if (XF_NULL == layout) return;
+
     if (layout->onCreate) layout->onCreate(layout);
 }
 
 static void XF_ViewDestroyLayout(XF_VIEW_Layout *layout) {
+    if (XF_NULL == layout) return;
     //XF_VIEW_LayoutDeleteUnits(layout);
+    layout->page = 0;
+    layout->posUnit = 0;
+    layout->sizeUnit = 0;
     if (layout->onDestroy) layout->onDestroy(layout);
 }
 
 static void XF_ViewShowLayout(XF_VIEW_Layout *layout) {
+    if (XF_NULL == layout) return;
+
+    mViewLayout = layout;
     XF_VIEW_LayoutShow(layout);
     if (layout->onShow) layout->onShow(layout);
 }
 
-/*static void view_process_msg(uint8 resPrev, uint8 resCurr, XF_VIEW_UnitMessage *msg) {
-    uint8 res = 0;
-    XF_VIEW_Unit *unitCurr = 0;
+static void XF_ViewFocusLayout(XF_VIEW_Layout *layout) {
+    XF_VIEW_UnitMessage msg = {XF_VIEW_UNIT_MESSAGE_TYPE_FOCUS, 0};
 
-    switch (resCurr) {
-        case XF_VIEW_UNIT_MESSAGE_RES_OK: {
-            return;
-        }
-        case XF_VIEW_UNIT_MESSAGE_RES_NEXT: {
-            XF_VIEW_LayoutFocusNextUnit(mViewLayout);
-            msg.type = XF_VIEW_UNIT_MESSAGE_TYPE_FOCUS;
-            break;
-        }
-        case XF_VIEW_UNIT_MESSAGE_RES_PREV: {
-            XF_VIEW_LayoutFocusPrevUnit(mViewLayout);
-            msg.type = XF_VIEW_UNIT_MESSAGE_TYPE_FOCUS;
-            break;
-        }
-        case XF_VIEW_UNIT_MESSAGE_RES_UNFOCUS: {
-            view_update_msg(XF_VIEW_UNIT_MESSAGE_RES_QUIT, resPrev, msg);
-            return;
-        }
-        case XF_VIEW_UNIT_MESSAGE_RES_QUIT: {
-            XF_ViewDestroyLayout(mViewLayout);
-            mViewLayout = XF_VIEW_LayoutFocusParent(mViewLayout);
-            XF_ViewCreateLayout(mViewLayout);
-            XF_ViewShowLayout(mViewLayout);
-            msg.type = XF_VIEW_UNIT_MESSAGE_TYPE_FOCUS;
-            break;
-        }
-    }
-    
-    unitCurr = XF_VIEW_LayoutFocusCurrUnit(mViewLayout);
-    unitCurr->onMessageReceiver(&res, unitCurr, msg);
-    view_update_msg(resCurr, res, msg);
-}*/
+    if (XF_NULL == layout) return;
+    view_process_msg(layout, &msg);
+}
 
-static void view_process_msg(XF_VIEW_UnitMessage *msg) {
+static void view_process_msg(XF_VIEW_Layout *layout, XF_VIEW_UnitMessage *msg) {
     uint8 res = XF_VIEW_UNIT_MESSAGE_RES_SIZE;
 
+    if (XF_NULL == layout) return;
+
     do {
-        XF_VIEW_Unit *unitCurr = XF_VIEW_LayoutFocusCurrUnit(mViewLayout);
+        XF_VIEW_Unit *unitCurr = XF_VIEW_LayoutFocusCurrUnit(layout);
         unitCurr->onMessageReceiver(&res, unitCurr, msg);
         switch (res) {
             case XF_VIEW_UNIT_MESSAGE_RES_NEXT: {
-                XF_VIEW_LayoutFocusNextUnit(mViewLayout);
+                XF_VIEW_LayoutFocusNextUnit(layout);
                 break;
             }
             case XF_VIEW_UNIT_MESSAGE_RES_PREV: {
-                if (mViewLayout->posUnit > 0) {
-                    XF_VIEW_LayoutFocusPrevUnit(mViewLayout);
+                if (layout->posUnit > 0) {
+                    XF_VIEW_LayoutFocusPrevUnit(layout);
                     break;
                 }
             }
             case XF_VIEW_UNIT_MESSAGE_RES_QUIT: {
-                XF_ViewDestroyLayout(mViewLayout);
-                mViewLayout = XF_VIEW_LayoutFocusParent(mViewLayout);
-                XF_ViewStart(mViewLayout);
+                XF_VIEW_Layout *parent = layout->parent;
+                XF_ViewDestroyLayout(layout);
+                XF_ViewShowLayout(parent);
+                XF_ViewFocusLayout(parent);
                 return;
             }
         }
@@ -88,17 +69,22 @@ static void view_process_msg(XF_VIEW_UnitMessage *msg) {
 }
 
 void XF_ViewStart(XF_VIEW_Layout *layout) {
-    XF_VIEW_UnitMessage msg = {XF_VIEW_UNIT_MESSAGE_TYPE_FOCUS, 0};
-    mViewLayout = layout;
+    if (XF_NULL == layout) return;
 
-    XF_ViewCreateLayout(mViewLayout);
-    XF_ViewShowLayout(mViewLayout);
-
-    view_process_msg(&msg);
+    XF_ViewCreateLayout(layout);
+    XF_ViewShowLayout(layout);
+    XF_ViewFocusLayout(layout);
 }
 
 void XF_ViewActionHandler(uint8 event) {
     XF_VIEW_UnitMessage msg = {XF_VIEW_UNIT_MESSAGE_TYPE_CONTROL, event};
+    view_process_msg(mViewLayout, &msg);
+}
 
-    view_process_msg(&msg);
+void XF_ViewSwitch(XF_VIEW_Layout *parent, XF_VIEW_Layout *child) {
+    if (XF_NULL == parent || XF_NULL == child) return;
+
+    if (parent->onHide) parent->onHide(parent);
+    child->parent = parent;
+    XF_ViewStart(child);
 }

@@ -4,7 +4,7 @@
 #include "xfunit.h"
 #include "xflayout.h"
 #include "xfview.h"
-#include "xfview_test_layout1.h"
+#include "xfview_test_layout2.h"
 #include "xfview_test_main.h"
 
 #define EVENTKB_INFO_SIZE          2
@@ -38,7 +38,7 @@ XF_EventContainer eventContainer = {
 void xfview_test_main() {
     XF_EventAddHandler(&EventKB, &ViewHandler);
 
-    XF_ViewStart(layoutTest1);  //显示界面
+    XF_ViewStart(layoutTest2);  //显示界面
     while (1) XF_EventContainerPolling(&eventContainer);
 }
 

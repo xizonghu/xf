@@ -15,7 +15,7 @@ typedef struct XF_VIEW_LAYOUT_S {
     void (*onShow)(struct XF_VIEW_LAYOUT_S *layout);  //显示完成时调用
     void (*onHide)(struct XF_VIEW_LAYOUT_S *layout);  //隐藏完成时调用
     void (*onDestroy)(struct XF_VIEW_LAYOUT_S *layout);  //销毁完成时调用
-    
+    char *name;
 } XF_VIEW_Layout;
 
 extern XF_VIEW_Layout *XF_VIEW_LayoutNew(attr sizeChild, void (*onLoad)(struct XF_VIEW_LAYOUT_S *layout), void (*onUnload)(struct XF_VIEW_LAYOUT_S *layout));

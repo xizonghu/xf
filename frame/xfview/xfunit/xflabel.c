@@ -12,8 +12,8 @@ static void label_destroy(XF_VIEW_Label *label) {
 }
 
 static void label_show(XF_VIEW_Label *label) {
-    bgraph_set_text(&graphMain, label->super.point.x, label->super.point.y, label->name, BGRAPH_COLOR_WHITE);
-    bgraph_refresh(&graphMain);
+    XF_BgraphSetText(&graphMain, label->super.point.x, label->super.point.y, label->name, XF_BGRAPH_COLOR_WHITE);
+    XF_BgraphFlush(&graphMain);
 }
 
 static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessage *msg) {

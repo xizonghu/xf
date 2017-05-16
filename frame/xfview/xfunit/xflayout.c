@@ -10,10 +10,16 @@ static int8 indexOf(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
     return -1;
 }
 
+static void layout_clear() {
+    XF_BgraphClear(&graphMain);
+    XF_BgraphFlush(&graphMain);
+}
+
 static void layout_show(XF_VIEW_Layout *layout) {
 }
 
 void XF_VIEW_LayoutShow(XF_VIEW_Layout *layout) {
+    layout_clear();
     XF_VIEW_LayoutShowUnits(layout);
 }
 

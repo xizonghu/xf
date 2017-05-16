@@ -18,13 +18,13 @@ static void button_destroy(XF_VIEW_Button *button) {
 }
 
 static void button_show(XF_VIEW_Button *button) {
-    bgraph_set_text(&graphMain, button->super.point.x, button->super.point.y, button->name, BGRAPH_COLOR_WHITE);
-    bgraph_refresh(&graphMain);
+    XF_BgraphSetText(&graphMain, button->super.point.x, button->super.point.y, button->name, XF_BGRAPH_COLOR_WHITE);
+    XF_BgraphFlush(&graphMain);
 }
 
 static void button_focus(XF_VIEW_Button *button) {
-    bgraph_set_text(&graphMain, button->super.point.x, button->super.point.y, button->name, BGRAPH_COLOR_BLACK);
-    bgraph_refresh(&graphMain);
+    XF_BgraphSetText(&graphMain, button->super.point.x, button->super.point.y, button->name, XF_BGRAPH_COLOR_BLACK);
+    XF_BgraphFlush(&graphMain);
 }
 
 static void button_unfocus(XF_VIEW_Button *button) {

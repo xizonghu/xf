@@ -22,4 +22,7 @@ extern void XF_ViewStart(XF_VIEW_Layout *layout);
 //有事件时的处理函数
 extern void XF_ViewActionHandler(uint8 msg);
 
+//切换layout
+extern void XF_ViewSwitch(XF_VIEW_Layout *parent, XF_VIEW_Layout *child);
+
 #endif
