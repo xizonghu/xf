@@ -1,6 +1,11 @@
-#include "xftypedef.h"
+﻿#include "xftypedef.h"
 #include "xfevent.h"
 
+#include "xfbgraph.h"
+#include "xffont.h"
+#include "xffont/font_8x16_VH.h"
+#include "xffont/font_8x16_H.h"
+#include "xftextout.h"
 #include "xfunit.h"
 #include "xflayout.h"
 #include "xfview.h"
@@ -17,6 +22,9 @@
 #define EVENTTR_ACTION_SIZE        5
 
 static void view_click_handler(XF_EventInfo *info);
+
+//static uint8 gfbVH[64/8][128] = {0};
+static uint8 gfbVH[64][128/8] = {0};
 
 XF_EventHandler *HandlerKB[3] = {0};
 XF_Event EventKB = {
@@ -36,6 +44,14 @@ XF_EventContainer eventContainer = {
 };
 
 void xfview_test_main() {
+    char str[] = "请输入密码";
+    XF_BgraphInit(&globalGraph, (uint8*)gfbVH, 128, 64);
+    XF_TextoutInit(&globalTextout, &globalGraph, &font8x16VH, &fontCN16x16VH);
+    //XF_TextoutInit(&globalTextout, &globalGraph, &font8x16H, 0);
+    //XF_TextoutPrint(&globalTextout, 0, 0, "hello world", XF_BGRAPH_FILL_NORMAL);
+    XF_TextoutPrint(&globalTextout, 13, 13, "hello world", XF_BGRAPH_FILL_NORMAL);
+    XF_BgraphFlush(&globalGraph);
+
     XF_EventAddHandler(&EventKB, &ViewHandler);
 
     XF_ViewStart(layoutTest2);  //显示界面

@@ -1,4 +1,4 @@
-#include "xftype.h"
+﻿#include "xftype.h"
 #include "xfea.h"
 #include "xfstate.h"
 #include "view.h"

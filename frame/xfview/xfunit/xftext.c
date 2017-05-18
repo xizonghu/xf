@@ -1,7 +1,8 @@
-#include <string.h>
+﻿#include <string.h>
 
 #include "xftypedef.h"
 #include "xfbgraph.h"
+#include "xftextout.h"
 #include "xfmalloc.h"
 
 #include "xfunit.h"
@@ -21,9 +22,8 @@ static XF_VIEW_UnitMessageRes text_backward(XF_VIEW_Text *text) {
     *(text->name + len) = '\0';
 
     //更新界面
-
-    XF_BgraphSetText(&graphMain, x + len * graphMain.pixelOfCharX, y, str, XF_BGRAPH_COLOR_WHITE);
-    XF_BgraphFlush(&graphMain);
+    XF_TextoutPrint(&globalTextout, x + len * globalTextout.fontChar->fontWidth, y, str, XF_BGRAPH_FILL_NORMAL);
+    XF_BgraphFlush(&globalGraph);
 
     return XF_VIEW_UNIT_MESSAGE_RES_OK;
 }
@@ -46,8 +46,8 @@ static XF_VIEW_UnitMessageRes text_forward(XF_VIEW_Text *text, char ch) {
         str[0] = ch;
     }
 
-    XF_BgraphSetText(&graphMain, x + (len - 1)*graphMain.pixelOfCharX, y, str, XF_BGRAPH_COLOR_WHITE);
-    XF_BgraphFlush(&graphMain);
+    XF_TextoutPrint(&globalTextout, x + (len - 1)*globalTextout.fontChar->fontWidth, y, str, XF_BGRAPH_FILL_NORMAL);
+    XF_BgraphFlush(&globalGraph);
 
 	//if(len >= text->size) return VIEW_RET_NEXT;
 
@@ -65,7 +65,7 @@ static void text_show(XF_VIEW_Text *text) {
     char strNull[] = "________________";
     *(text->name + 0) = '\0';
     strNull[text->size] = '\0';
-    XF_BgraphSetText(&graphMain, text->super.point.x, text->super.point.y, strNull, XF_BGRAPH_COLOR_WHITE);
+    XF_TextoutPrint(&globalTextout, text->super.point.x, text->super.point.y, strNull, XF_BGRAPH_FILL_NORMAL);
 }
 
 static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessage *msg) {

@@ -1,4 +1,4 @@
-#include "xftypedef.h"
+﻿#include "xftypedef.h"
 #include "xfbgraph.h"
 #include "xfmalloc.h"
 
@@ -11,8 +11,8 @@ static int8 indexOf(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
 }
 
 static void layout_clear() {
-    XF_BgraphClear(&graphMain);
-    XF_BgraphFlush(&graphMain);
+    XF_BgraphClear(&globalGraph);
+    XF_BgraphFlush(&globalGraph);
 }
 
 static void layout_show(XF_VIEW_Layout *layout) {

@@ -1,0 +1,5 @@
+xfbgraph是图形模块
+
+xffont是字库
+
+xftextout是字符显示，依赖xfbgraph和xffont

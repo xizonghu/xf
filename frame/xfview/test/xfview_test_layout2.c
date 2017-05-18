@@ -4,6 +4,7 @@
 #include "xflayout.h"
 #include "xflabel.h"
 #include "xflist.h"
+#include "xfview.h"
 #include "xfview_test_layout1.h"
 #include "xfview_test_layout2.h"
 

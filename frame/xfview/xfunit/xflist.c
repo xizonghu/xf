@@ -1,5 +1,6 @@
-#include "xftypedef.h"
+﻿#include "xftypedef.h"
 #include "xfbgraph.h"
+#include "xftextout.h"
 #include "xfmalloc.h"
 
 #include "xfunit.h"
@@ -74,17 +75,17 @@ static void list_show(XF_VIEW_List *list) {
     }
 
     for(pos = 0; pos < list->sizeCursor; pos++) {
-        XF_BgraphSetText(&graphMain, x, y + pos * graphMain.pixelOfCharY, strNull, XF_BGRAPH_COLOR_WHITE);
+        XF_TextoutPrint(&globalTextout, x, y + pos * globalTextout.fontChar->fontHeight, strNull, XF_BGRAPH_FILL_NORMAL);
         if(XF_NULL == curr) continue;
 
         if(pos == list->posCursor) {
-            XF_BgraphSetText(&graphMain, x, y + pos * graphMain.pixelOfCharY, curr->name, XF_BGRAPH_COLOR_BLACK);
+            XF_TextoutPrint(&globalTextout, x, y + pos * globalTextout.fontChar->fontHeight, curr->name, XF_BGRAPH_FILL_REVERSE);
         } else {
-            XF_BgraphSetText(&graphMain, x, y + pos * graphMain.pixelOfCharY, curr->name, XF_BGRAPH_COLOR_WHITE);
+            XF_TextoutPrint(&globalTextout, x, y + pos * globalTextout.fontChar->fontHeight, curr->name, XF_BGRAPH_FILL_NORMAL);
         }
         curr = curr->brother;
     }
-    XF_BgraphFlush(&graphMain);
+    XF_BgraphFlush(&globalGraph);
 }
 
 static void list_delete(XF_VIEW_List *list) {

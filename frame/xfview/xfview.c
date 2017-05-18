@@ -1,4 +1,4 @@
-#include "xftypedef.h"
+﻿#include "xftypedef.h"
 
 #include "xfunit.h"
 #include "xflayout.h"
@@ -44,6 +44,7 @@ static void view_process_msg(XF_VIEW_Layout *layout, XF_VIEW_UnitMessage *msg) {
 
     do {
         XF_VIEW_Unit *unitCurr = XF_VIEW_LayoutFocusCurrUnit(layout);
+        if (XF_NULL == unitCurr->onMessageReceiver) return;
         unitCurr->onMessageReceiver(&res, unitCurr, msg);
         switch (res) {
             case XF_VIEW_UNIT_MESSAGE_RES_NEXT: {
@@ -58,6 +59,7 @@ static void view_process_msg(XF_VIEW_Layout *layout, XF_VIEW_UnitMessage *msg) {
             }
             case XF_VIEW_UNIT_MESSAGE_RES_QUIT: {
                 XF_VIEW_Layout *parent = layout->parent;
+                if (XF_NULL == parent) return;
                 XF_ViewDestroyLayout(layout);
                 XF_ViewShowLayout(parent);
                 XF_ViewFocusLayout(parent);

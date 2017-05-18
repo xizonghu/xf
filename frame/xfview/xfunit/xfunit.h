@@ -1,4 +1,4 @@
-#ifndef __XF_UNIT_H__
+﻿#ifndef __XF_UNIT_H__
 #define __XF_UNIT_H__
 
 //整个xfview的所有框架都是以XF_VIEW_Unit为基础定义的

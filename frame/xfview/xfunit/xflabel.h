@@ -1,4 +1,4 @@
-#ifndef __XF_LABEL_H__
+﻿#ifndef __XF_LABEL_H__
 #define __XF_LABEL_H__
 
 typedef struct XF_VIEW_LABEL_S {

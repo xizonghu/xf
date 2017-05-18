@@ -1,4 +1,4 @@
-#ifndef __XF_TEXT_H__
+﻿#ifndef __XF_TEXT_H__
 #define __XF_TEXT_H__
 
 typedef enum XF_VIEW_TEXT_TYPE_E {

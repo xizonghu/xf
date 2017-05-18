@@ -1,4 +1,4 @@
-#ifndef __XF_LAYOUT_H__
+﻿#ifndef __XF_LAYOUT_H__
 #define __XF_LAYOUT_H__
 
 //layout的生命周期onCreate() -> onShow() <-> onHide() -> onDestroy()

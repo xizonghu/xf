@@ -1,4 +1,4 @@
-#ifndef __XF_LIST_H__
+﻿#ifndef __XF_LIST_H__
 #define __XF_LIST_H__
 
 typedef enum {

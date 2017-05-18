@@ -1,5 +1,6 @@
-#include "xftypedef.h"
+﻿#include "xftypedef.h"
 #include "xfbgraph.h"
+#include "xftextout.h"
 #include "xfmalloc.h"
 
 #include "xfunit.h"
@@ -18,13 +19,13 @@ static void button_destroy(XF_VIEW_Button *button) {
 }
 
 static void button_show(XF_VIEW_Button *button) {
-    XF_BgraphSetText(&graphMain, button->super.point.x, button->super.point.y, button->name, XF_BGRAPH_COLOR_WHITE);
-    XF_BgraphFlush(&graphMain);
+    XF_TextoutPrint(&globalTextout, button->super.point.x, button->super.point.y, button->name, XF_BGRAPH_FILL_NORMAL);
+    XF_BgraphFlush(&globalGraph);
 }
 
 static void button_focus(XF_VIEW_Button *button) {
-    XF_BgraphSetText(&graphMain, button->super.point.x, button->super.point.y, button->name, XF_BGRAPH_COLOR_BLACK);
-    XF_BgraphFlush(&graphMain);
+    XF_TextoutPrint(&globalTextout, button->super.point.x, button->super.point.y, button->name, XF_BGRAPH_FILL_REVERSE);
+    XF_BgraphFlush(&globalGraph);
 }
 
 static void button_unfocus(XF_VIEW_Button *button) {
