@@ -1,4 +1,4 @@
-﻿#include "xftypedef.h"
+#include "xftypedef.h"
 #include "xfbgraph.h"
 #include "xftextout.h"
 #include "xfmalloc.h"
@@ -11,12 +11,11 @@
 #define BUTTON_MSG_KEY_ENTER        '#'
 #define BUTTON_MSG_KEY_BACK         '*'
 
-static void button_create(XF_VIEW_Button *button) {
+/*static void button_create(XF_VIEW_Button *button) {
+}*/
 
-}
-
-static void button_destroy(XF_VIEW_Button *button) {
-}
+/*static void button_destroy(XF_VIEW_Button *button) {
+}*/
 
 static void button_show(XF_VIEW_Button *button) {
     XF_TextoutPrint(&globalTextout, button->super.point.x, button->super.point.y, button->name, XF_BGRAPH_FILL_NORMAL);
@@ -91,7 +90,7 @@ XF_VIEW_Button *XF_VIEW_ButtonNew(attr x, attr y, const char *name, void (*onCli
     button->super.type = XF_VIEW_UNIT_TYPE_BUTTON;
     button->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     button->super.onMessageReceiver = onMessageReceiver;
-    button->name = name;
+    button->name = (char*)name;
     button->click = onClick;
     return button;
 }
@@ -99,3 +98,4 @@ XF_VIEW_Button *XF_VIEW_ButtonNew(attr x, attr y, const char *name, void (*onCli
 void XF_VIEW_ButtonDelete(XF_VIEW_Button *button) {
     XF_free(button);
 }
+

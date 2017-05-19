@@ -1,4 +1,4 @@
-﻿#include <string.h>
+#include <string.h>
 
 #include "xftypedef.h"
 #include "xfbgraph.h"
@@ -54,11 +54,11 @@ static XF_VIEW_UnitMessageRes text_forward(XF_VIEW_Text *text, char ch) {
 	return XF_VIEW_UNIT_MESSAGE_RES_OK;
 }
 
-static void text_create(XF_VIEW_Text *text) {
-}
+/*static void text_create(XF_VIEW_Text *text) {
+}*/
 
-static void text_destroy(XF_VIEW_Text *text) {
-}
+/*static void text_destroy(XF_VIEW_Text *text) {
+}*/
 
 
 static void text_show(XF_VIEW_Text *text) {

@@ -1,4 +1,4 @@
-﻿#include "xftypedef.h"
+#include "xftypedef.h"
 #include "xfbgraph.h"
 #include "xftextout.h"
 #include "xfmalloc.h"
@@ -6,13 +6,13 @@
 #include "xfunit.h"
 #include "xflist.h"
 
-static void list_create(XF_VIEW_List *list) {
+/*static void list_create(XF_VIEW_List *list) {
     //XF_BgraphSetText(&graphMain, list->super.point.x, list->super.point.y, list->super.buffer, XF_BGRAPH_COLOR_WHITE);
-}
+}*/
 
-static void list_destroy(XF_VIEW_List *list) {
+/*static void list_destroy(XF_VIEW_List *list) {
     //XF_BgraphSetText(&graphMain, list->super.point.x, list->super.point.y, list->super.buffer, XF_BGRAPH_COLOR_WHITE);
-}
+}*/
 
 //static XF_VIEW_ListUnit *listunit_get_tail
 
@@ -34,12 +34,12 @@ static XF_VIEW_ListUnit *listunit_get_curr(XF_VIEW_ListUnit *listunit) {
 
     if (XF_NULL == curr) return XF_NULL;
 
-    //偏移到当前位置
+    //偏移到当前位置 
     for(pos = 0; curr->brother && pos < listunit->pos; pos++) {
         curr = curr->brother;
     }
 
-    //修正pos
+    //修正pos 
     listunit->pos = pos;
 
     return curr;
@@ -53,7 +53,7 @@ static XF_VIEW_ListUnit *list_get_select(XF_VIEW_List *list) {
     XF_VIEW_ListUnit *curr = listunit_get_curr(list->head);
     uint8 pos = 0;
 
-    //偏移到当前显示位置
+    //偏移到当前显示位置 
     for(pos = 0; curr && pos < list->posCursor; pos++) {
         curr = curr->brother;
     }
@@ -67,9 +67,8 @@ static void list_show(XF_VIEW_List *list) {
     uint8 pos = 0;
     uint8 x = list->super.point.x, y = list->super.point.y;
     XF_VIEW_ListUnit *curr = listunit_get_curr(list->head);
-    XF_VIEW_ListUnit *temp = XF_NULL;
 
-    //检测能否打印
+    //检测能否打印 
     if (XF_NULL == list_get_select(list)) {
         return;
     }
@@ -88,9 +87,8 @@ static void list_show(XF_VIEW_List *list) {
     XF_BgraphFlush(&globalGraph);
 }
 
-static void list_delete(XF_VIEW_List *list) {
-    
-}
+/*static void list_delete(XF_VIEW_List *list) {
+}*/
 
 static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessage *msg) {
     XF_VIEW_List *list = (XF_VIEW_List*)unit;
@@ -224,7 +222,6 @@ void XF_VIEW_ListUnitAddBrother(XF_VIEW_ListUnit *listunit, XF_VIEW_ListUnit *br
 
 void XF_VIEW_ListUnitAddChild(XF_VIEW_ListUnit *listunit, XF_VIEW_ListUnit *child) {
     XF_VIEW_ListUnit *last = listunit->child;
-    uint8 pos = 0;
 
     //设置父节点
     child->parent = listunit;

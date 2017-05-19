@@ -1,4 +1,4 @@
-﻿#include "xftypedef.h"
+#include "xftypedef.h"
 
 #include "xftextout.h"
 
@@ -26,6 +26,7 @@ void XF_TextoutPrint(XF_Textout *tt, uint8 x, uint8 y, char *str, XF_BgraphFill 
             str++;
         }
         else {  //chinese
+            val = *(uint16*)str;
             font = tt->fontOther;
             str+= 2;
         }

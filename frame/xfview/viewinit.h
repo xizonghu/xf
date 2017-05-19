@@ -1,4 +1,4 @@
-﻿#ifndef __VIEW_INIT_H__
+#ifndef __VIEW_INIT_H__
 #define __VIEW_INIT_H__
 
 #define UNIT_NEW(x, y, type, data)                       {{x, y}, type, data, VIEW_VISIBALE_TRUE}

@@ -1,4 +1,4 @@
-﻿#ifndef __XF_UNIT_H__
+#ifndef __XF_UNIT_H__
 #define __XF_UNIT_H__
 
 //整个xfview的所有框架都是以XF_VIEW_Unit为基础定义的
@@ -55,7 +55,7 @@ typedef struct XF_VIEW_UNIT_MESSAGE_S {
     uint8 val;
 } XF_VIEW_UnitMessage;
 
-typedef void (*XF_VIEW_UnitCallback)(uint8 *res, struct XF_VIEW_UNIT_S *unit, XF_VIEW_UnitMessage *msg);
+//typedef void (*XF_VIEW_UnitCallback)(uint8 *res, struct XF_VIEW_UNIT_S *unit, XF_VIEW_UnitMessage *msg);
 
 typedef struct XF_VIEW_POINT_S {
     attr x;
@@ -66,7 +66,7 @@ typedef struct XF_VIEW_UNIT_S {
     XF_VIEW_Point point;
     XF_VIEW_UnitVisiable visible;
     XF_VIEW_UnitType type;
-    XF_VIEW_UnitCallback onMessageReceiver;
+    void (*onMessageReceiver)(uint8 *res, struct XF_VIEW_UNIT_S *unit, XF_VIEW_UnitMessage *msg);
 } XF_VIEW_Unit;
 
 #endif

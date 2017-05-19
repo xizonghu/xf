@@ -1,22 +1,22 @@
-﻿#include "xftypedef.h"
+#include "xftypedef.h"
 #include "xfbgraph.h"
 #include "xfmalloc.h"
 
 #include "xfunit.h"
 #include "xflayout.h"
 
-static int8 indexOf(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
+/*static int8 indexOf(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
     uint8 i = 0;
     return -1;
-}
+}*/
 
 static void layout_clear() {
     XF_BgraphClear(&globalGraph);
     XF_BgraphFlush(&globalGraph);
 }
 
-static void layout_show(XF_VIEW_Layout *layout) {
-}
+/*static void layout_show(XF_VIEW_Layout *layout) {
+}*/
 
 void XF_VIEW_LayoutShow(XF_VIEW_Layout *layout) {
     layout_clear();

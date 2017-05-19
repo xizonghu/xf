@@ -1,4 +1,4 @@
-﻿#include "xftypedef.h"
+#include "xftypedef.h"
 #include "xfbgraph.h"
 #include "xftextout.h"
 #include "xfmalloc.h"
@@ -6,11 +6,11 @@
 #include "xfunit.h"
 #include "xflabel.h"
 
-static void label_create(XF_VIEW_Label *label) {
-}
+/*static void label_create(XF_VIEW_Label *label) {
+}*/
 
-static void label_destroy(XF_VIEW_Label *label) {
-}
+/*static void label_destroy(XF_VIEW_Label *label) {
+}*/
 
 static void label_show(XF_VIEW_Label *label) {
     XF_TextoutPrint(&globalTextout, label->super.point.x, label->super.point.y, label->name, XF_BGRAPH_FILL_NORMAL);
@@ -52,7 +52,7 @@ XF_VIEW_Label *XF_VIEW_LabelNew(attr x, attr y, const char *name) {
     label->super.type = XF_VIEW_UNIT_TYPE_LABEL;
     label->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     label->super.onMessageReceiver = onMessageReceiver;
-    label->name = name;
+    label->name = (char*)name;
     return label;
 }
 

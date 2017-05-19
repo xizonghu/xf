@@ -77,7 +77,7 @@ void XF_free(void *firstbyte) {
 
     if(last_valid_address <= (addr *)firstbyte || (addr *)firstbyte <= managed_memory_start) return;
 
-    mcb = (addr *)firstbyte - sizeof(struct mem_control_block);
+    mcb = (struct mem_control_block*)((addr *)firstbyte - sizeof(struct mem_control_block));
     if(0 == mcb->is_available) mcb->is_available = 1;
 
     memory_counter -= mcb->size;

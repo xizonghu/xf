@@ -1,7 +1,7 @@
-﻿#include "xftypedef.h"
+#include "xftypedef.h"
 
-#include "xfunit.h"
-#include "xflayout.h"
+#include "xfunit/xfunit.h"
+#include "xfunit/xflayout.h"
 #include "xfview.h"
 
 static XF_VIEW_Layout *mViewLayout;

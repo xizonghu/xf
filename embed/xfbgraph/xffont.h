@@ -1,14 +1,11 @@
-﻿#ifndef __XF_FONT_H__
+#ifndef __XF_FONT_H__
 #define __XF_FONT_H__
 
-//字库像素数据的存储方式分为三种
-//按行存储（水平方式）
-//按列存储（垂直方式）
-//混合存储（水平方向的若干个像素组成一个cell，以cell为单位按垂直方式存储；或者垂直方向的若干个像素组成一个cell，以cell为单位按水平方式存储）。
+//汉字字库的内码最好用GBK编码（单双编码，英文单字节兼容ASCII，中文双字节）
 
 typedef struct XF_BGRAPH_FONT_S {
     const char *name;  //字库名字
-    char *addr;  //字库地址
+    uint8 *addr;  //字库地址
     int size;  //字数
     uint8 fontWidth;
     uint8 fontHeight;

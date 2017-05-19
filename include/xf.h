@@ -1,4 +1,4 @@
-#include "../module/xffifobuffer/xffifobuffer.h"
+﻿#include "../module/xffifobuffer/xffifobuffer.h"
 
 #ifndef __XF_H__
 #define __XF_H__

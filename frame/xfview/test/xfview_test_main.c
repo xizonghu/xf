@@ -1,4 +1,4 @@
-ï»¿#include "xftypedef.h"
+#include "xftypedef.h"
 #include "xfevent.h"
 
 #include "xfbgraph.h"
@@ -44,21 +44,22 @@ XF_EventContainer eventContainer = {
 };
 
 void xfview_test_main() {
-    char str[] = "è¯·è¾“å…¥å¯†ç ";
+
     XF_BgraphInit(&globalGraph, (uint8*)gfbVH, 128, 64);
     XF_TextoutInit(&globalTextout, &globalGraph, &font8x16VH, &fontCN16x16VH);
     //XF_TextoutInit(&globalTextout, &globalGraph, &font8x16H, 0);
     //XF_TextoutPrint(&globalTextout, 0, 0, "hello world", XF_BGRAPH_FILL_NORMAL);
-    XF_TextoutPrint(&globalTextout, 13, 13, "hello world", XF_BGRAPH_FILL_NORMAL);
+    //XF_TextoutPrint(&globalTextout, 13, 13, "hello world", XF_BGRAPH_FILL_NORMAL);
+    XF_TextoutPrint(&globalTextout, 13, 13, "ÇëÊäÈëÃÜÂë.", XF_BGRAPH_FILL_NORMAL);
     XF_BgraphFlush(&globalGraph);
 
     XF_EventAddHandler(&EventKB, &ViewHandler);
 
-    XF_ViewStart(layoutTest2);  //æ˜¾ç¤ºç•Œé¢
+    XF_ViewStart(layoutTest2);  //ÏÔÊ¾½çÃæ
     while (1) XF_EventContainerPolling(&eventContainer);
 }
 
 static void view_click_handler(XF_EventInfo *info) {
     char ch = info->type;
-    XF_ViewActionHandler(ch);  //ç•Œé¢äº‹ä»¶å¤„ç†å‡½æ•°
+    XF_ViewActionHandler(ch);  //½çÃæÊÂ¼ş´¦Àíº¯Êı
 }

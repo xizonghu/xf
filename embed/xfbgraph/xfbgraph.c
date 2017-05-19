@@ -1,4 +1,4 @@
-ï»¿#include "xftypedef.h"
+#include "xftypedef.h"
 #include "xfbgraph.h"
 
 //#define XF_BGRAPH_PIXEL_CELL              32
@@ -7,8 +7,8 @@
 
 //#define LCD_PIXEL_WIDTH                           128U
 //#define LCD_PIXEL_HEIGHT                          64U
-#define LCD_PIXEL_CELL                          8U    //ä¸€ä¸ªcellå çš„åƒç´ æ•°
-#define LCD_PIXEL_BYTE                          8U //ä¸€ä¸ªå­˜å‚¨å•ä½å çš„åƒç´ æ•°
+#define LCD_PIXEL_CELL                          8U    //Ò»¸öcellÕ¼µÄÏñËØÊı 
+#define LCD_PIXEL_BYTE                          8U //Ò»¸ö´æ´¢µ¥Î»Õ¼µÄÏñËØÊı 
 
 //#define LCD_BYTE_WIDTH                            (LCD_PIXEL_WIDTH / 8)  
 //#define LCD_BYTE_HEIGHT                           (LCD_PIXEL_HEIGHT / 8)
@@ -25,11 +25,11 @@ XF_Bgraph globalGraph = {
 XF_Bgraph globalGraph = {0};
 
 /*static void write_font(XF_Bgraph *bg, uint8 x, uint8 y, uint8 const *bits, uint8 h) {
-    uint32 *fb = &mfb[y][x >> XF_BGRAPH_CELL_OFFSET];  //å°†xè½¬ä¸ºfbä½ç½® (x >> 5) = (x / 32)
+    uint32 *fb = &mfb[y][x >> XF_BGRAPH_CELL_OFFSET];  //½«x×ªÎªfbÎ»ÖÃ (x >> 5) = (x / 32)
     uint32 shft = (x & 0x1FU);     //(x & 0x1FU) = (x % 32)
     for (y = 0; y < h; ++y, fb += (XF_BGRAPH_PIXEL_WIDTH >> XF_BGRAPH_CELL_OFFSET)) {  //(LCD_LENGHT >> 5) = (32)
         *fb |= ((uint32)bits[y] << shft);
-        if (shft > 24U) {  //ä¸€ä¸ªå­—èŠ‚8bitï¼Œè¶…å‡ºæœ¬cellï¼Œéœ€è¦å»å¡«å……ä¸‹ä¸€ä¸ªcell
+        if (shft > 24U) {  //Ò»¸ö×Ö½Ú8bit£¬³¬³ö±¾cell£¬ĞèÒªÈ¥Ìî³äÏÂÒ»¸öcell
             *(fb + 1) |= ((uint32)bits[y] >> (32U - shft));
         }
     }
@@ -56,7 +56,7 @@ void XF_BgraphDraw_H(XF_Bgraph *bg, uint8 x, uint8 y, uint8 *data, uint8 width, 
     }
 }
 
-//åªæ”¯æŒyä¸º16çš„å€æ•°
+//Ö»Ö§³ÖyÎª16µÄ±¶Êı
 /*void XF_BgraphDraw_VH(XF_Bgraph *bg, uint8 x, uint8 y, uint8 *data, uint8 width, uint8 height, XF_BgraphFill fill) {
     uint8 posX = 0;
     uint8 sizeX = (x + width < bg->width) ? (x + width) : bg->width;
@@ -79,17 +79,17 @@ void XF_BgraphDraw_H(XF_Bgraph *bg, uint8 x, uint8 y, uint8 *data, uint8 width, 
 }*/
 
 static void write_fb_VH(XF_Bgraph *bg, uint8 x, uint8 y, uint8 dat) {
-    uint8 *pfb1, *pfb2; //å› ä¸ºfbä»¥8ä¸ªåƒç´ å¯¹é½åˆ°ä¸€ä¸ªå­—èŠ‚çš„æ–¹å¼å­˜å‚¨æ•°æ®ï¼Œæ‰€ä»¥è¦å†™ä¸€ä¸ªå­—èŠ‚çš„æ•°æ®å¯èƒ½æ¶‰åŠfbçš„ä¸¤ä¸ªåœ°å€
+    uint8 *pfb1, *pfb2; //ÒòÎªfbÒÔ8¸öÏñËØ¶ÔÆëµ½Ò»¸ö×Ö½ÚµÄ·½Ê½´æ´¢Êı¾İ£¬ËùÒÔÒªĞ´Ò»¸ö×Ö½ÚµÄÊı¾İ¿ÉÄÜÉæ¼°fbµÄÁ½¸öµØÖ·
     uint8 mask = y % LCD_PIXEL_CELL;
     uint8 posRow = y / LCD_PIXEL_CELL;
 
-    //å†™pfb1æ®µçš„æ•°æ®
+    //Ğ´pfb1¶ÎµÄÊı¾İ
     pfb1 = bg->fb + (posRow + 0) * bg->width + x;
-    *pfb1 &= 0xff >> (LCD_PIXEL_CELL - mask);   //æ¸…é™¤åŸæœ‰æ•°æ®ä½
+    *pfb1 &= 0xff >> (LCD_PIXEL_CELL - mask);   //Çå³ıÔ­ÓĞÊı¾İÎ»
     *pfb1 |= dat << mask;
 
     if (mask) {
-        //å†™pfb2æ®µçš„æ•°æ®
+        //Ğ´pfb2¶ÎµÄÊı¾İ
         pfb2 = bg->fb + (posRow + 1) * bg->width + x;
         *pfb2 &= 0xff << mask;
         *pfb2 |= dat >> (LCD_PIXEL_CELL - mask);
@@ -100,8 +100,7 @@ void XF_BgraphDraw_VH(XF_Bgraph *bg, uint8 x, uint8 y, uint8 *data, uint8 width,
     uint8 posX = 0;
     uint8 sizeX = (x + width < bg->width) ? (x + width) : bg->width;
     uint8 sizeY = (y + height < bg->height) ? (y + height) : bg->height;
-    uint8 poscellY = y / LCD_PIXEL_CELL;
-    uint8 sizecellY = sizeY / LCD_PIXEL_CELL;
+
     for (; y < sizeY; y += LCD_PIXEL_CELL) {
         for (posX = x; posX < sizeX; posX++) {
             if (XF_BGRAPH_FILL_REVERSE == fill) {

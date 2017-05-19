@@ -1,4 +1,4 @@
-#ifndef __XF_CONF_H__
+﻿#ifndef __XF_CONF_H__
 #define __XF_CONF_H__
 
 typedef char int8_t;

@@ -1,4 +1,4 @@
-﻿#ifndef __XF_EVENT_H__
+#ifndef __XF_EVENT_H__
 #define __XF_EVENT_H__
 
 //EventHandler事件处理器，用于处理事件。

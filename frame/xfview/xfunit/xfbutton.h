@@ -1,9 +1,9 @@
-﻿#ifndef __XF_BUTTON_H__
+#ifndef __XF_BUTTON_H__
 #define __XF_BUTTON_H__
 
 typedef struct XF_VIEW_BUTTON_S {
     XF_VIEW_Unit super;
-    const char *name;
+    char *name;
     void (*click)(void *arg);
 } XF_VIEW_Button;
 

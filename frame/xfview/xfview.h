@@ -1,4 +1,4 @@
-﻿#ifndef __XF_VIEW_H__
+#ifndef __XF_VIEW_H__
 #define __XF_VIEW_H__
 
 //基于xfbgraph, xfmalloc的一套单色UI。

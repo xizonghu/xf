@@ -1,4 +1,4 @@
-﻿#ifndef __XF_TEXTOUT_H__
+#ifndef __XF_TEXTOUT_H__
 #define __XF_TEXTOUT_H__
 
 #include "xfbgraph.h"
