@@ -81,5 +81,5 @@ static XF_VIEW_Layout layout = {
 XF_VIEW_Layout *layoutTest2 = &layout;  //XF_VIEW_LayoutNew(7, onLoad, onUnload);
 
 static void onStorageSelect(void *arg) {
-    XF_ViewSwitch(layoutTest2, layoutTest1);
+    XF_ViewStart(layoutTest1);
 }

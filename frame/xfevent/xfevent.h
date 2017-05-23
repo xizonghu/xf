@@ -1,9 +1,9 @@
 #ifndef __XF_EVENT_H__
 #define __XF_EVENT_H__
 
-//EventHandleräº‹ä»¶å¤„ç†å™¨ï¼Œç”¨äºå¤„ç†äº‹ä»¶ã€‚
-//Eventäº‹ä»¶åŒ…å«å¤šä¸ªHandler,å½“Eventå‘é€æ—¶ï¼Œé€šè¿‡EventHandlerçš„å›è°ƒå‡½æ•°EventHandlerReceiverï¼Œå°†EventInfoæºå¸¦çš„ä¿¡æ¯é€åˆ°å„æ³¨å†Œåˆ°è¯¥Eventä¸Šçš„EventHandler
-//EventContaineræ˜¯Eventçš„å®¹å™¨ï¼Œè½®è¯¢æ£€æµ‹å„Eventæ˜¯å¦å‘ç”Ÿã€‚
+//EventHandlerÊÂ¼ş´¦ÀíÆ÷£¬ÓÃÓÚ´¦ÀíÊÂ¼ş¡£
+//EventÊÂ¼ş°üº¬¶à¸öHandler,µ±Event·¢ËÍÊ±£¬Í¨¹ıEventHandlerµÄ»Øµ÷º¯ÊıEventHandlerReceiver£¬½«EventInfoĞ¯´øµÄĞÅÏ¢ËÍµ½¸÷×¢²áµ½¸ÃEventÉÏµÄEventHandler
+//EventContainerÊÇEventµÄÈİÆ÷£¬ÂÖÑ¯¼ì²â¸÷EventÊÇ·ñ·¢Éú¡£
 
 typedef enum XF_EVENT_STATE_E {
     XF_EVENT_STATE_LISTEN,
@@ -47,6 +47,9 @@ extern void XF_EventNotify(XF_Event *evt, XF_EventInfo *info);
 
 extern uint8 XF_EventProcess(XF_Event *evt, XF_EventInfo *info);
 
-extern void XF_EventContainerPolling(XF_EventContainer *container);  //å¿…é¡»æ”¾åœ¨ä¸»while(1)ä¸­,æ•´ä¸ªç³»ç»Ÿåªæœ‰è¿™ä¸€å¤„ä¸å¯è·³å‡ºçš„å¾ªç¯
+extern void XF_EventPolling(XF_Event *evt);
+
+
+extern void XF_EventContainerPolling(XF_EventContainer *container);  //±ØĞë·ÅÔÚÖ÷while(1)ÖĞ,Õû¸öÏµÍ³Ö»ÓĞÕâÒ»´¦²»¿ÉÌø³öµÄÑ­»·
 
 #endif

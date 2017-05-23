@@ -4,7 +4,7 @@
 #include "xfunit/xflayout.h"
 #include "xfview.h"
 
-static XF_VIEW_Layout *mViewLayout;
+static XF_VIEW_Layout *mViewLayout = XF_NULL;
 static void view_process_msg(XF_VIEW_Layout *layout, XF_VIEW_UnitMessage *msg);
 
 static void XF_ViewCreateLayout(XF_VIEW_Layout *layout) {
@@ -25,7 +25,7 @@ static void XF_ViewDestroyLayout(XF_VIEW_Layout *layout) {
 static void XF_ViewShowLayout(XF_VIEW_Layout *layout) {
     if (XF_NULL == layout) return;
 
-    mViewLayout = layout;
+    //mViewLayout = layout;
     XF_VIEW_LayoutShow(layout);
     if (layout->onShow) layout->onShow(layout);
 }
@@ -58,11 +58,7 @@ static void view_process_msg(XF_VIEW_Layout *layout, XF_VIEW_UnitMessage *msg) {
                 }
             }
             case XF_VIEW_UNIT_MESSAGE_RES_QUIT: {
-                XF_VIEW_Layout *parent = layout->parent;
-                if (XF_NULL == parent) return;
-                XF_ViewDestroyLayout(layout);
-                XF_ViewShowLayout(parent);
-                XF_ViewFocusLayout(parent);
+                XF_ViewStop(layout);
                 return;
             }
         }
@@ -73,20 +69,29 @@ static void view_process_msg(XF_VIEW_Layout *layout, XF_VIEW_UnitMessage *msg) {
 void XF_ViewStart(XF_VIEW_Layout *layout) {
     if (XF_NULL == layout) return;
 
-    XF_ViewCreateLayout(layout);
-    XF_ViewShowLayout(layout);
-    XF_ViewFocusLayout(layout);
+    if (XF_NULL == mViewLayout) mViewLayout = layout;
+    else {
+        if (mViewLayout->onHide) mViewLayout->onHide(mViewLayout);
+        layout->parent = mViewLayout;
+        mViewLayout = layout;
+    }
+
+    XF_ViewCreateLayout(mViewLayout);
+    XF_ViewShowLayout(mViewLayout);
+    XF_ViewFocusLayout(mViewLayout);
+}
+
+void XF_ViewStop(XF_VIEW_Layout *layout) {
+    if (XF_NULL == layout | XF_NULL == layout->parent) return;
+
+    mViewLayout = layout->parent;
+
+    XF_ViewDestroyLayout(layout);
+    XF_ViewShowLayout(mViewLayout);
+    XF_ViewFocusLayout(mViewLayout);
 }
 
 void XF_ViewActionHandler(uint8 event) {
     XF_VIEW_UnitMessage msg = {XF_VIEW_UNIT_MESSAGE_TYPE_CONTROL, event};
     view_process_msg(mViewLayout, &msg);
-}
-
-void XF_ViewSwitch(XF_VIEW_Layout *parent, XF_VIEW_Layout *child) {
-    if (XF_NULL == parent || XF_NULL == child) return;
-
-    if (parent->onHide) parent->onHide(parent);
-    child->parent = parent;
-    XF_ViewStart(child);
 }

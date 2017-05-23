@@ -34,12 +34,12 @@ static XF_VIEW_ListUnit *listunit_get_curr(XF_VIEW_ListUnit *listunit) {
 
     if (XF_NULL == curr) return XF_NULL;
 
-    //åç§»åˆ°å½“å‰ä½ç½® 
+    //Æ«ÒÆµ½µ±Ç°Î»ÖÃ 
     for(pos = 0; curr->brother && pos < listunit->pos; pos++) {
         curr = curr->brother;
     }
 
-    //ä¿®æ­£pos 
+    //ĞŞÕıpos 
     listunit->pos = pos;
 
     return curr;
@@ -53,7 +53,7 @@ static XF_VIEW_ListUnit *list_get_select(XF_VIEW_List *list) {
     XF_VIEW_ListUnit *curr = listunit_get_curr(list->head);
     uint8 pos = 0;
 
-    //åç§»åˆ°å½“å‰æ˜¾ç¤ºä½ç½® 
+    //Æ«ÒÆµ½µ±Ç°ÏÔÊ¾Î»ÖÃ 
     for(pos = 0; curr && pos < list->posCursor; pos++) {
         curr = curr->brother;
     }
@@ -68,7 +68,7 @@ static void list_show(XF_VIEW_List *list) {
     uint8 x = list->super.point.x, y = list->super.point.y;
     XF_VIEW_ListUnit *curr = listunit_get_curr(list->head);
 
-    //æ£€æµ‹èƒ½å¦æ‰“å° 
+    //¼ì²âÄÜ·ñ´òÓ¡ 
     if (XF_NULL == list_get_select(list)) {
         return;
     }
@@ -112,19 +112,19 @@ static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessag
             XF_VIEW_ListUnit *curr = list_get_select(list);
             switch (msg->val) {
                 case XF_VIEW_UNIT_KEY_UP: {
-                    //æ£€æŸ¥æ•°æ®é¦–
+                    //¼ì²éÊı¾İÊ×
                     if(0 == head->pos && 0 == list->posCursor) break;
-                    //æ£€æŸ¥æ˜¾ç¤ºé¦–
+                    //¼ì²éÏÔÊ¾Ê×
                     if(0 == list->posCursor) head->pos--;
                     else list->posCursor--;
                     list_show(list);
                     break;
                 }
                 case XF_VIEW_UNIT_KEY_DOWN: {
-                    //æ£€æŸ¥æ•°æ®å°¾
+                    //¼ì²éÊı¾İÎ²
                     if(XF_NULL == curr) break;
                     
-                    //æ£€æŸ¥æ˜¾ç¤ºå°¾
+                    //¼ì²éÏÔÊ¾Î²
                     if((list->sizeCursor - 1) == list->posCursor) {
                         if (XF_NULL == listunit_get_child_by_pos(head, head->pos + list->sizeCursor)) break;
                         head->pos++;
@@ -135,10 +135,10 @@ static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessag
                 }
                 case XF_VIEW_UNIT_KEY_ENTER: {
                     if (XF_NULL == curr) break;
-                    //æ£€æŸ¥æ˜¯å¦æœ‰onSelect
+                    //¼ì²éÊÇ·ñÓĞonSelect
                     if(XF_NULL != curr->onSelect) curr->onSelect(XF_NULL);
 
-                    //æ£€æŸ¥æ˜¯å¦æœ‰å­list
+                    //¼ì²éÊÇ·ñÓĞ×Ólist
                     if (XF_NULL == curr->child) break;
                     list->head = curr;
                     list->posCursor = 0;
@@ -208,13 +208,13 @@ void XF_VIEW_ListUnitAddBrother(XF_VIEW_ListUnit *listunit, XF_VIEW_ListUnit *br
     XF_VIEW_ListUnit *last = listunit->brother;
     uint8 pos = 0;
 
-    //å…„å¼ŸèŠ‚ç‚¹ä¸ºç©º
+    //ĞÖµÜ½ÚµãÎª¿Õ
     if (XF_NULL == last) {
         listunit->brother = brother;
         return;
     }
 
-    //å…„å¼ŸèŠ‚ç‚¹ä¸ä¸ºç©º
+    //ĞÖµÜ½Úµã²»Îª¿Õ
     for (pos = 0; last && last->brother; pos++) last = last->brother;
 
     last->brother = brother;
@@ -223,15 +223,15 @@ void XF_VIEW_ListUnitAddBrother(XF_VIEW_ListUnit *listunit, XF_VIEW_ListUnit *br
 void XF_VIEW_ListUnitAddChild(XF_VIEW_ListUnit *listunit, XF_VIEW_ListUnit *child) {
     XF_VIEW_ListUnit *last = listunit->child;
 
-    //è®¾ç½®çˆ¶èŠ‚ç‚¹
+    //ÉèÖÃ¸¸½Úµã
     child->parent = listunit;
 
-    //å­©å­èŠ‚ç‚¹ä¸ºç©º
+    //º¢×Ó½ÚµãÎª¿Õ
     if (XF_NULL == last) {
         listunit->child = child;
         return;
     }
 
-    //å­©å­èŠ‚ç‚¹ä¸ä¸ºç©º
+    //º¢×Ó½Úµã²»Îª¿Õ
     XF_VIEW_ListUnitAddBrother(last, child);
 }

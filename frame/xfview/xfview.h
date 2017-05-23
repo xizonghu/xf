@@ -1,8 +1,8 @@
 #ifndef __XF_VIEW_H__
 #define __XF_VIEW_H__
 
-//åŸºäºxfbgraph, xfmallocçš„ä¸€å¥—å•è‰²UIã€‚
-//å»ºè®®ä¸xfeventç»“åˆæ„æˆç³»ç»Ÿ
+//»ùÓÚxfbgraph, xfmallocµÄÒ»Ì×µ¥É«UI¡£
+//½¨ÒéÓëxfevent½áºÏ¹¹³ÉÏµÍ³
 
 typedef enum XF_VIEW_MESSAGE_TYPE_E {
     XF_VIEW_EVENT_FOCUS_NEXT = 1,
@@ -16,13 +16,11 @@ typedef struct XF_VIEW_MESSAGE_S {
     uint8 value;
 } XF_ViewMessage;
 
-//æ¡†æ¶ä¸»å…¥å£
-extern void XF_ViewStart(XF_VIEW_Layout *layout);
+//¿ò¼Ü½Ó¿Ú
+extern void XF_ViewStart(XF_VIEW_Layout *layout);   //´ò¿ªÒ»¸ö´°¿Ú
+extern void XF_ViewStop(XF_VIEW_Layout *layout);    //¹Ø±ÕÒ»¸ö´°¿Ú
 
-//æœ‰äº‹ä»¶æ—¶çš„å¤„ç†å‡½æ•°
+//ÓĞÊÂ¼şÊ±µÄ´¦Àíº¯Êı
 extern void XF_ViewActionHandler(uint8 msg);
-
-//åˆ‡æ¢layout
-extern void XF_ViewSwitch(XF_VIEW_Layout *parent, XF_VIEW_Layout *child);
 
 #endif

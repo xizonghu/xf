@@ -1,20 +1,20 @@
 #ifndef __XF_LAYOUT_H__
 #define __XF_LAYOUT_H__
 
-//layoutçš„ç”Ÿå‘½å‘¨æœŸonCreate() -> onShow() <-> onHide() -> onDestroy()
+//layoutµÄÉúÃüÖÜÆÚonCreate() -> onShow() <-> onHide() -> onDestroy()
 
 typedef struct XF_VIEW_LAYOUT_S {
     //XF_VIEW_Unit super;
     struct XF_VIEW_LAYOUT_S *parent;
     XF_VIEW_Unit **units;
-    attr maxUnit;  //å¯ä»¥ä¼˜åŒ–æ‰
+    attr maxUnit;  //¿ÉÒÔÓÅ»¯µô
     attr sizeUnit;
     attr posUnit;
     attr page;
-    void (*onCreate)(struct XF_VIEW_LAYOUT_S *layout);  //åˆ›å»ºå®Œæˆæ—¶è°ƒç”¨
-    void (*onShow)(struct XF_VIEW_LAYOUT_S *layout);  //æ˜¾ç¤ºå®Œæˆæ—¶è°ƒç”¨
-    void (*onHide)(struct XF_VIEW_LAYOUT_S *layout);  //éšè—å®Œæˆæ—¶è°ƒç”¨
-    void (*onDestroy)(struct XF_VIEW_LAYOUT_S *layout);  //é”€æ¯å®Œæˆæ—¶è°ƒç”¨
+    void (*onCreate)(struct XF_VIEW_LAYOUT_S *layout);  //´´½¨Íê³ÉÊ±µ÷ÓÃ
+    void (*onShow)(struct XF_VIEW_LAYOUT_S *layout);  //ÏÔÊ¾Íê³ÉÊ±µ÷ÓÃ
+    void (*onHide)(struct XF_VIEW_LAYOUT_S *layout);  //Òş²ØÍê³ÉÊ±µ÷ÓÃ
+    void (*onDestroy)(struct XF_VIEW_LAYOUT_S *layout);  //Ïú»ÙÍê³ÉÊ±µ÷ÓÃ
     char *name;
 } XF_VIEW_Layout;
 

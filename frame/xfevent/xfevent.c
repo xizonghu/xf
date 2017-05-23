@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include "xftypedef.h"
+#include "xfmalloc.h"
 #include "xfevent.h"
 
 static int8 indexOf(XF_Event *evt, XF_EventHandler *handler) {
@@ -14,6 +15,25 @@ static int8 indexOf(XF_Event *evt, XF_EventHandler *handler) {
         }
     }
     return -1;
+}
+
+XF_Event *XF_EventNew(uint8 sizeHandler) {
+    XF_Event *evt = XF_NULL;
+    XF_EventHandler **handlers = XF_NULL;
+    if (XF_NULL == (evt = (XF_Event*)XF_malloc(sizeof(XF_Event)))) return XF_NULL;
+    if (XF_NULL == (handlers = (XF_EventHandler**)XF_malloc(sizeof(XF_EventHandler) * sizeHandler))) {
+        XF_free(evt);
+        return XF_NULL;
+    }
+
+    evt->handlers = handlers;
+    evt->state = XF_EVENT_STATE_LISTEN;
+    return evt;
+}
+
+void XF_EventDelete(XF_Event *event) {
+    XF_free(event->handlers);
+    XF_free(event);
 }
 
 int8 XF_EventAddHandler(XF_Event *evt, XF_EventHandler *handler) {
@@ -42,13 +62,13 @@ int8 XF_EventRemoveHandler(XF_Event *evt, XF_EventHandler *handler) {
 
 void XF_EventNotify(XF_Event *evt, XF_EventInfo *info) {
     evt->info = *info;
-    evt->state = XF_EVENT_STATE_NOTIFY;
+    evt->state = (uint8)XF_EVENT_STATE_NOTIFY;
 }
 
 uint8 XF_EventProcess(XF_Event *evt, XF_EventInfo *info) {
     uint8 i = 0;
 
-    evt->state = XF_EVENT_STATE_PROCESS;
+    evt->state = (uint8)XF_EVENT_STATE_PROCESS;
     for(i = 0; i < evt->sizeHandler; i++) {
         XF_EventHandler *handler;
         handler = evt->handlers[i];
@@ -60,13 +80,16 @@ uint8 XF_EventProcess(XF_Event *evt, XF_EventInfo *info) {
     return 0;
 }
 
+void XF_EventPolling(XF_Event *evt) {
+    if (XF_EVENT_STATE_NOTIFY == evt->state) {
+        XF_EventProcess(evt, &evt->info);
+    }
+}
+
 void XF_EventContainerPolling(XF_EventContainer *container) {
     uint8 pos = 0;
 
     for (pos = 0; pos < container->sizeEvent; pos++) {
-        XF_Event *evt = container->events[pos];
-        if (XF_EVENT_STATE_NOTIFY == evt->state) {
-            XF_EventProcess(evt, &evt->info);
-        }
+        XF_EventPolling(container->events[pos]);
     }
 }

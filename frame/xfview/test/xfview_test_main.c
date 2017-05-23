@@ -37,11 +37,6 @@ XF_EventHandler ViewHandler = {
     "view click",
     view_click_handler,
 };
-XF_Event *events[1] = {&EventKB};
-XF_EventContainer eventContainer = {
-    events,
-    1,
-};
 
 void xfview_test_main() {
 
@@ -56,7 +51,7 @@ void xfview_test_main() {
     XF_EventAddHandler(&EventKB, &ViewHandler);
 
     XF_ViewStart(layoutTest2);  //œ‘ æΩÁ√Ê
-    while (1) XF_EventContainerPolling(&eventContainer);
+    while (1) XF_EventPolling(&EventKB);
 }
 
 static void view_click_handler(XF_EventInfo *info) {
