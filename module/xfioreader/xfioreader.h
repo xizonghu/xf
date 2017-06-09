@@ -13,29 +13,31 @@ typedef enum {
     XF_IOREADER_STATE_COMPLETE,
 } XF_IOReaderState;
 
+//模块所依赖的接口函数，需根据实际情况自行实现
 typedef struct {
-    uint16 (*readData)(int fd, void *buffer, uint16 size);
-    uint16 (*getBodySize)(void *head, uint16 size);
+    uint16 (*readData)(int fd, char *buffer, uint16 size);  //
+    uint16 (*getBodySize)(char *head, uint16 size);
     void (*setTimeout)();
     uint8 (*isTimeout)();
 } XF_IOReaderIf;
 
+//回调函数
 typedef struct {
-    void (*processData)(void *buffer, uint16 size);
+    void (*processData)(char *buffer, uint16 size);
 } XF_IOReaderCb;
 
 typedef struct {
     int fd;
     uint8 state;
     uint16 posBuffer;
-    void *buffer;
+    char *buffer;
     uint16 sizeBuffer;
     uint8 sizeHead;
     const XF_IOReaderIf *IF;
     const XF_IOReaderCb *CB;
 } XF_IOReader;
 
-extern void XF_IOReaderInit(XF_IOReader *reader, void *buffer, uint16 sizeBuffer, uint8 sizeHead, int fd, const XF_IOReaderIf *IF, const XF_IOReaderCb *CB);
-extern void XF_IOReaderScan(XF_IOReader *reader);
+extern void XF_IOReaderInit(XF_IOReader *reader, char *buffer, uint16 sizeBuffer, uint8 sizeHead, int fd, const XF_IOReaderIf *IF, const XF_IOReaderCb *CB);
+extern void XF_IOReaderPoll(XF_IOReader *reader);
 
 #endif

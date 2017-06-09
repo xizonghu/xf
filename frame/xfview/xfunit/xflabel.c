@@ -13,7 +13,7 @@
 }*/
 
 static void label_show(XF_VIEW_Label *label) {
-    XF_TextoutPrint(&globalTextout, label->super.point.x, label->super.point.y, label->name, XF_BGRAPH_FILL_NORMAL);
+    XF_TextoutPrint(&globalTextout, label->super.point.x, label->super.point.y, label->val, XF_BGRAPH_FILL_NORMAL);
     XF_BgraphFlush(&globalGraph);
 }
 
@@ -42,7 +42,7 @@ static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessag
     }
 }
 
-XF_VIEW_Label *XF_VIEW_LabelNew(attr x, attr y, const char *name) {
+XF_VIEW_Label *XF_VIEW_LabelNew(attr x, attr y, const char *val) {
     XF_VIEW_Label *label = XF_malloc(sizeof(XF_VIEW_Label));
 
     if (XF_NULL == label) return XF_NULL;
@@ -52,10 +52,19 @@ XF_VIEW_Label *XF_VIEW_LabelNew(attr x, attr y, const char *name) {
     label->super.type = XF_VIEW_UNIT_TYPE_LABEL;
     label->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     label->super.onMessageReceiver = onMessageReceiver;
-    label->name = (char*)name;
+    label->val = (char*)val;
     return label;
 }
 
 void XF_VIEW_LabelDelete(XF_VIEW_Label* label) {
     XF_free(label);
+}
+
+void XF_VIEW_LabelSetValue(XF_VIEW_Label *label, char *val) {
+    char str[] = "                ";
+    str[strlen(label->val)] = '\0';
+    label->val = str;
+    label_show(label);
+    label->val = val;
+    label_show(label);
 }

@@ -3,10 +3,9 @@
 #include "xftypedef.h"
 #include "xfioreader.h"
 
-#define NULL  0
 #define resetIOReader(reader) {reader->posBuffer = 0;reader->state = XF_IOREADER_STATE_COMPLETE;}
 
-static uint16 updateBuffer(void *dst, const void *src, uint16 size) {
+static uint16 updateBuffer(char *dst, const char *src, uint16 size) {
     uint16 pos = 0;
     for (pos = 0; pos < size; pos++) {
         *((uint8*)dst + pos) = *((uint8*)src + pos);
@@ -36,7 +35,7 @@ static void XF_IOReaderProcess(XF_IOReader *reader) {
     else if (sizeBodyInBuf > sizeBodyInHead) {
         uint16 sizeData = reader->sizeHead + sizeBodyInHead;
         reader->CB->processData(reader->buffer, sizeData);
-        updateBuffer(reader->buffer, (void*)((uint8*)reader->buffer + sizeData), sizeBodyInBuf - sizeBodyInHead);
+        updateBuffer(reader->buffer, (char*)((uint8*)reader->buffer + sizeData), sizeBodyInBuf - sizeBodyInHead);
         reader->posBuffer -= sizeData;
         XF_IOReaderProcess(reader);
     }
@@ -47,7 +46,7 @@ static void XF_IOReaderProcess(XF_IOReader *reader) {
     }
 }
 
-void XF_IOReaderInit(XF_IOReader *reader, void *buffer, uint16 sizeBuffer, uint8 sizeHead, int fd, const XF_IOReaderIf *IF, const XF_IOReaderCb *CB) {
+void XF_IOReaderInit(XF_IOReader *reader, char *buffer, uint16 sizeBuffer, uint8 sizeHead, int fd, const XF_IOReaderIf *IF, const XF_IOReaderCb *CB) {
     reader->posBuffer = 0;
     reader->state = XF_IOREADER_STATE_COMPLETE;
     reader->buffer = buffer;
@@ -58,10 +57,10 @@ void XF_IOReaderInit(XF_IOReader *reader, void *buffer, uint16 sizeBuffer, uint8
     reader->CB = CB;
 }
 
-void XF_IOReaderScan(XF_IOReader *reader) {
+void XF_IOReaderPoll(XF_IOReader *reader) {
     uint16 size = 0;
 
-    if(NULL == reader->IF || NULL == reader->CB) return;
+    if(XF_NULL == reader->IF || XF_NULL == reader->CB) return;
 
     //¶ÁÊý¾Ý
     if (0 >= (size = reader->IF->readData(reader->fd, (uint8*)reader->buffer + reader->posBuffer, reader->sizeBuffer - reader->posBuffer))) {

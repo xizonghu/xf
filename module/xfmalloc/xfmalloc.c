@@ -8,8 +8,8 @@ struct mem_control_block {
     uint8 size;
 };
 
-static uint8 memory_poll[XF_MALLOC_SIZE];
-static int16 memory_avaliable = XF_MALLOC_SIZE;
+//static uint8 memory_poll[XF_MALLOC_SIZE];
+static int16 memory_avaliable = 0;
 static uint16 memory_counter = 0;
 
 static uint8 has_initialized = 0;
@@ -17,7 +17,9 @@ static addr *managed_memory_start;
 static addr *last_valid_address;
 
 static void malloc_init() {
-    managed_memory_start = (addr *)memory_poll;
+    memory_avaliable = XF_MallocConfig.size;
+
+    managed_memory_start = (addr *)XF_MallocConfig.addr;
     last_valid_address = managed_memory_start;
     has_initialized = 1;
 }
@@ -55,7 +57,8 @@ void *XF_malloc(uint8 numbytes) {
         memory_avaliable -= numbytes;
         memory_location = last_valid_address;
         last_valid_address = last_valid_address + numbytes;
-        if(last_valid_address >= (managed_memory_start + XF_MALLOC_SIZE)) {
+        //if(last_valid_address >= (managed_memory_start + XF_MALLOC_SIZE)) {
+        if(last_valid_address >= (managed_memory_start + XF_MallocConfig.size)) {
             return 0;
         }
         //We need to initialize the mem_control_block

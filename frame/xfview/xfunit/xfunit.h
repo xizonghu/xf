@@ -11,17 +11,24 @@
 #define XF_VIEW_UNIT_KEY_DOWN         '8'   //KEY_NEXT
 #define XF_VIEW_UNIT_KEY_ENTER        '#'
 #define XF_VIEW_UNIT_KEY_BACK         '*'
+#define XF_VIEW_UNIT_KEY_PAGE_UP      '4'
+#define XF_VIEW_UNIT_KEY_PAGE_DOWN    '6'
 
 typedef uint8 attr;
 
 typedef enum XF_VIEW_UNIT_TYPE_E {
     XF_VIEW_UNIT_TYPE_LABEL = (attr)1,
-    XF_VIEW_UNIT_TYPE_TEXT,
-    XF_VIEW_UNIT_TYPE_OPTION,
-    XF_VIEW_UNIT_TYPE_LIST,
-    XF_VIEW_UNIT_TYPE_BUTTON,
-    XF_VIEW_UNIT_TYPE_LAYOUT,
-    XF_VIEW_UNIT_TYPE_TRIGGER,
+    XF_VIEW_UNIT_TYPE_TEXTEDIT = 2,
+    XF_VIEW_UNIT_TYPE_OPTION = 3,
+    XF_VIEW_UNIT_TYPE_LIST = 4,
+    XF_VIEW_UNIT_TYPE_BUTTON = 5,
+    XF_VIEW_UNIT_TYPE_LAYOUT = 6,
+    XF_VIEW_UNIT_TYPE_TRIGGER = 7,
+    XF_VIEW_UNIT_TYPE_IMAGE = 8,
+    XF_VIEW_UNIT_TYPE_DATATABLE = 9,
+    XF_VIEW_UNIT_TYPE_LISTTREE = 10,
+    XF_VIEW_UINT_TYPE_DATALIST = 11,
+    XF_VIEW_UINT_TYPE_TEXTLIST = 12,
 } XF_VIEW_UnitType;
 
 typedef enum XF_VIEW_UNIT_VISIBLE_E {
@@ -36,7 +43,7 @@ typedef enum XF_VIEW_UNIT_MESSAGE_TYPE_S {
     XF_VIEW_UNIT_MESSAGE_TYPE_FOCUS,            //聚焦
     XF_VIEW_UNIT_MESSAGE_TYPE_SHOW,             //显示
     XF_VIEW_UNIT_MESSAGE_TYPE_DELETE,
-    XF_VIEW_UNIT_MESSAGE_TYPE_CONTROL,
+    XF_VIEW_UNIT_MESSAGE_TYPE_CONTROL,          //按键
 } XF_VIEW_UnitMessageType;
 
 typedef enum XF_VIEW_UNIT_MESSAGE_RES_E {
@@ -45,6 +52,7 @@ typedef enum XF_VIEW_UNIT_MESSAGE_RES_E {
     XF_VIEW_UNIT_MESSAGE_RES_NEXT,
     XF_VIEW_UNIT_MESSAGE_RES_PREV,
     XF_VIEW_UNIT_MESSAGE_RES_UNFOCUS,  //返回该值说明部件不能被focus
+    XF_VIEW_UNIT_MESSAGE_RES_UNDEFINE,  //返回该值说明部件不能处理message
     XF_VIEW_UNIT_MESSAGE_RES_TIMEOUT,
 
     XF_VIEW_UNIT_MESSAGE_RES_SIZE
@@ -64,8 +72,8 @@ typedef struct XF_VIEW_POINT_S {
 
 typedef struct XF_VIEW_UNIT_S {
     XF_VIEW_Point point;
-    XF_VIEW_UnitVisiable visible;
-    XF_VIEW_UnitType type;
+    attr visible;
+    attr type;
     void (*onMessageReceiver)(uint8 *res, struct XF_VIEW_UNIT_S *unit, XF_VIEW_UnitMessage *msg);
 } XF_VIEW_Unit;
 

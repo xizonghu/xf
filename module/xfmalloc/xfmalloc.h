@@ -3,6 +3,12 @@
 
 #define XF_MALLOC_SIZE    512
 
+typedef struct XF_MALLOC_CONFIG_S {
+    void *addr;
+    uint16 size;
+} XF_MALLOC_CONFIG_T;
+
+extern XF_MALLOC_CONFIG_T XF_MallocConfig;  //需要外部实现
 extern void *XF_malloc(uint8 numbytes);
 extern void XF_free(void *firstbyte);
 

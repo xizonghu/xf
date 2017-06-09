@@ -1,28 +1,26 @@
 #include "xftypedef.h"
+#include "xfmalloc.h"
 #include "xfevent.h"
 
 #include "xfbgraph.h"
 #include "xffont.h"
 #include "xffont/font_8x16_VH.h"
-#include "xffont/font_8x16_H.h"
 #include "xftextout.h"
-#include "xfunit.h"
-#include "xflayout.h"
+#include "xfunit/xfunit.h"
+#include "xfunit/xflayout.h"
 #include "xfview.h"
-#include "xfview_test_layout2.h"
-#include "xfview_test_main.h"
 
-#define EVENTKB_INFO_SIZE          2
-#define EVENTKB_ACTION_SIZE        3
-
-#define EVENTFP_INFO_SIZE          1
-#define EVENTFP_ACTION_SIZE        1
-
-#define EVENTTR_INFO_SIZE          1
-#define EVENTTR_ACTION_SIZE        5
+#include "layout_manage.h"
+#include "layout_unlock.h"
+#include "layout_main.h"
 
 static void view_click_handler(XF_EventInfo *info);
 
+static uint8 m[5120] = {0};
+XF_MALLOC_CONFIG_T XF_MallocConfig = {
+    (void*)m,
+    (uint16)sizeof(m)
+};
 //static uint8 gfbVH[64/8][128] = {0};
 static uint8 gfbVH[64][128/8] = {0};
 
@@ -50,7 +48,10 @@ void xfview_test_main() {
 
     XF_EventAddHandler(&EventKB, &ViewHandler);
 
-    XF_ViewStart(layoutTest2);  //显示界面
+    //XF_ViewStart(&gLayout2);  //显示界面
+    //XF_ViewStart(&gLayoutImage);  //显示界面
+    //XF_ViewStart(&gLayoutManage);
+    XF_ViewStart(&gLayoutUnlock);
     while (1) XF_EventPolling(&EventKB);
 }
 

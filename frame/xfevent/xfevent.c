@@ -1,10 +1,7 @@
-#include <string.h>
-
 #include "xftypedef.h"
-#include "xfmalloc.h"
 #include "xfevent.h"
 
-static int8 indexOf(XF_Event *evt, XF_EventHandler *handler) {
+/*static int8 indexOf(XF_Event *evt, XF_EventHandler *handler) {
     uint8 i = 0;
     for(i = 0; i < evt->sizeHandler; i++) {
         XF_EventHandler *p;
@@ -15,47 +12,44 @@ static int8 indexOf(XF_Event *evt, XF_EventHandler *handler) {
         }
     }
     return -1;
-}
-
-XF_Event *XF_EventNew(uint8 sizeHandler) {
-    XF_Event *evt = XF_NULL;
-    XF_EventHandler **handlers = XF_NULL;
-    if (XF_NULL == (evt = (XF_Event*)XF_malloc(sizeof(XF_Event)))) return XF_NULL;
-    if (XF_NULL == (handlers = (XF_EventHandler**)XF_malloc(sizeof(XF_EventHandler) * sizeHandler))) {
-        XF_free(evt);
-        return XF_NULL;
-    }
-
-    evt->handlers = handlers;
-    evt->state = XF_EVENT_STATE_LISTEN;
-    return evt;
-}
-
-void XF_EventDelete(XF_Event *event) {
-    XF_free(event->handlers);
-    XF_free(event);
-}
+}*/
 
 int8 XF_EventAddHandler(XF_Event *evt, XF_EventHandler *handler) {
-    uint8 i = 0;
-    if(0 <= indexOf(evt, handler)) {
-        return -1;
+    XF_EventHandler *pos = XF_NULL;
+
+    if (XF_NULL == evt || XF_NULL == handler) return -1;
+
+    if(XF_NULL == evt->HeadHandler) {
+        evt->HeadHandler = handler;
+        handler->next = XF_NULL;
+        return 0;
     }
 
-    for(i = 0; i < evt->sizeHandler; i++) {
-        if(0 == evt->handlers[i]) {
-            evt->handlers[i] = handler;
-            return 0;
-        }
-    }
+    for (pos = evt->HeadHandler; XF_NULL != pos->next; pos = pos->next);
+    pos->next = handler;
+    handler->next = XF_NULL;
 
-    return -2;
+    return 0;
 }
 
 int8 XF_EventRemoveHandler(XF_Event *evt, XF_EventHandler *handler) {
-    int8 i = 0;
-    if(0 > (i = indexOf(evt, handler))) return -1;
-    evt->handlers[i] = 0;
+    XF_EventHandler *prev = XF_NULL;
+
+    if (XF_NULL == evt || XF_NULL == handler) return -1;
+    if (XF_NULL == evt->HeadHandler) return -2;
+    if (evt->HeadHandler == handler) {
+        evt->HeadHandler = XF_NULL;
+        return 0;
+    }
+
+    for (prev = evt->HeadHandler; prev->next != XF_NULL && prev->next != handler; prev = prev->next);
+    if (XF_NULL == prev->next) return -3;
+
+    if (handler == prev->next) {
+        prev->next = prev->next->next;
+        handler->next = XF_NULL;
+        return 0;
+    }
 
     return 0;
 }
@@ -66,13 +60,12 @@ void XF_EventNotify(XF_Event *evt, XF_EventInfo *info) {
 }
 
 uint8 XF_EventProcess(XF_Event *evt, XF_EventInfo *info) {
-    uint8 i = 0;
+    XF_EventHandler *handler = XF_NULL;
+
+    if (XF_NULL == evt) return -1;
 
     evt->state = (uint8)XF_EVENT_STATE_PROCESS;
-    for(i = 0; i < evt->sizeHandler; i++) {
-        XF_EventHandler *handler;
-        handler = evt->handlers[i];
-        if(XF_NULL == handler) continue;
+    for(handler = evt->HeadHandler; XF_NULL != handler; handler = handler->next) {
         if(XF_NULL == handler->onEventReceiver) continue;
         handler->onEventReceiver(info);
     }
@@ -86,10 +79,41 @@ void XF_EventPolling(XF_Event *evt) {
     }
 }
 
-void XF_EventContainerPolling(XF_EventContainer *container) {
-    uint8 pos = 0;
+void XF_EventListAddEvent(XF_EventList *list, XF_Event *evt) {
+    XF_Event *head = XF_NULL;
 
-    for (pos = 0; pos < container->sizeEvent; pos++) {
-        XF_EventPolling(container->events[pos]);
+    if (XF_NULL == list || XF_NULL == evt) return;
+    if (XF_NULL == list->head) {
+        list->head = evt;
+        evt->next = XF_NULL;
+    }
+
+    for (head = list->head; XF_NULL != head->next; head = head->next);
+
+    head->next = evt;
+    evt->next = XF_NULL;
+    return;
+}
+
+void XF_EventListPolling(XF_EventList *list) {
+    XF_Event *evt = XF_NULL;
+
+    if (XF_NULL == list) return;
+    for (evt = list->head; XF_NULL != evt; evt = evt->next) XF_EventPolling(evt);
+    return;
+}
+
+void XF_EventPollerAdd(XF_EventPoller *head, XF_EventPoller *poller) {
+    XF_EventPoller *prev = XF_NULL;
+    if (XF_NULL == head || XF_NULL == poller) return;
+
+    for (prev = head; XF_NULL != prev->next; prev = prev->next);
+    prev->next = poller;
+    poller->next = XF_NULL;
+}
+
+void XF_EventPollerPoll(XF_EventPoller *poller) {
+    for (; XF_NULL != poller; poller = poller->next) {
+        if (poller->poll) poller->poll();
     }
 }
