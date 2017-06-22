@@ -131,7 +131,7 @@ XF_VIEW_List *XF_VIEW_ListNew(attr x, attr y, attr sizeCursor, void (*onSelect)(
 
     tt->super.point.x = x;
     tt->super.point.y = y;
-    tt->super.type = XF_VIEW_UNIT_TYPE_LIST;
+    //tt->super.type = XF_VIEW_UNIT_TYPE_LIST;
     tt->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     tt->super.onMessageReceiver = onMessageReceiver;
     tt->head = XF_NULL;

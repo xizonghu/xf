@@ -4,6 +4,7 @@
 #include "xfunit/xfunit.h"
 #include "xfunit/xflayout.h"
 #include "xfunit/xflabel.h"
+#include "xfview.h"
 
 #include "layout_reset_factory.h"
 
@@ -14,7 +15,7 @@ static void onCreate(XF_VIEW_Layout *layout) {
 
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mLabelTopBar);
 
-    XF_ViewFocusUnit(mLabelTopBar);
+    XF_ViewFocusUnit((XF_VIEW_Unit*)mLabelTopBar);
 }
 
 static void onShow(XF_VIEW_Layout *layout) {

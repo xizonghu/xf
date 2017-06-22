@@ -1,11 +1,11 @@
 #ifndef __XF_MALLOC_H__
 #define __XF_MALLOC_H__
 
-#define XF_MALLOC_SIZE    512
-
 typedef struct XF_MALLOC_CONFIG_S {
     void *addr;
     uint16 size;
+    uint16 sizeAvalid;
+    uint16 sizeUsed;
 } XF_MALLOC_CONFIG_T;
 
 extern XF_MALLOC_CONFIG_T XF_MallocConfig;  //需要外部实现

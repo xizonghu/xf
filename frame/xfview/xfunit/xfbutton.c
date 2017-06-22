@@ -87,7 +87,7 @@ XF_VIEW_Button *XF_VIEW_ButtonNew(attr x, attr y, const char *name, void (*onCli
 
     button->super.point.x = x;
     button->super.point.y = y;
-    button->super.type = XF_VIEW_UNIT_TYPE_BUTTON;
+    //button->super.type = XF_VIEW_UNIT_TYPE_BUTTON;
     button->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     button->super.onMessageReceiver = onMessageReceiver;
     button->name = (char*)name;

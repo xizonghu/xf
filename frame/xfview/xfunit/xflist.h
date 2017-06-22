@@ -3,7 +3,7 @@
 
 typedef struct XF_VIEW_LIST_UNIT_S {
     char *val;
-    struct XF_VIEW_LISTTREE_UNIT_S *next;
+    struct XF_VIEW_LIST_UNIT_S *next;
 } XF_VIEW_ListUnit;
 
 typedef struct XF_VIEW_LIST_S {

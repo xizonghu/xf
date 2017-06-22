@@ -4,6 +4,7 @@
 #include "xfunit/xfunit.h"
 #include "xfunit/xflayout.h"
 #include "xfunit/xflabel.h"
+#include "xfview.h"
 
 #include "layout_add_fp.h"
 
@@ -20,7 +21,7 @@ static void onCreate(XF_VIEW_Layout *layout) {
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mLabelInfo);
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mLabelTip);
 
-    XF_ViewFocusUnit(mLabelTip);
+    XF_ViewFocusUnit((XF_VIEW_Unit*)mLabelTip);
 }
 
 static void onShow(XF_VIEW_Layout *layout) {

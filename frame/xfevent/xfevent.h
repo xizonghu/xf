@@ -55,6 +55,11 @@ void XF_EventPollerAdd(XF_EventPoller *head, XF_EventPoller *poller);
 void XF_EventPollerPoll(XF_EventPoller *poller);
 
 extern void XF_EventListAddEvent(XF_EventList *list, XF_Event *evt);
+extern int8 XF_EventPollerRemove(XF_EventPoller *head, XF_EventPoller *poller);
+
 extern void XF_EventListPolling(XF_EventList *list);    //必须放在主循环中,一直查询Event的状态
 
+//需支持malloc才可使用
+extern XF_Event *XF_EventNew(XF_EventHandler *h);
+extern void XF_EventDelete(XF_Event *e);
 #endif

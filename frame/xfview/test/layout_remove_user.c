@@ -5,6 +5,7 @@
 #include "xfunit/xflayout.h"
 #include "xfunit/xflabel.h"
 #include "xfunit/xftextlist.h"
+#include "xfview.h"
 
 #include "layout_add_user.h"
 
@@ -15,7 +16,7 @@ static const char *strs[] = {
     "2",
     "3","4","5","6","7","8"
 };
-static const uint8 countStr = 8;
+static const uint8 countStr = 2;
 static uint8 posStrs = 0;
 
 static XF_VIEW_Label *mLabelTopBar;
@@ -24,7 +25,7 @@ static XF_VIEW_TextList *mTList;
 static void page_update(uint8 start) {
     uint8 pos = 0;
     for (pos = 0; pos < TLIST_COUNT; pos++) {
-        if (start + pos < countStr) XF_VIEW_TextListSetVal(mTList, pos, strs[start + pos]);
+        if (start + pos < countStr) XF_VIEW_TextListSetVal(mTList, pos, (char*)strs[start + pos]);
         else XF_VIEW_TextListSetVal(mTList, pos, "");
     }
 }
@@ -67,7 +68,7 @@ static void onCreate(XF_VIEW_Layout *layout) {
 
     page_init();
 
-    XF_ViewFocusUnit(mTList);
+    XF_ViewFocusUnit((XF_VIEW_Unit*)mTList);
 }
 
 static void onShow(XF_VIEW_Layout *layout) {

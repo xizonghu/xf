@@ -20,9 +20,9 @@ static void onTextPasswdStateChange(uint8 state, char *val) {
         //更新界面
         XF_VIEW_TextEditSetValue(mTextPasswd, STRING_NULL);
         XF_VIEW_LabelSetValue(mLabelInfo, STRING_INPUT_AGAIN);
-        XF_ViewSetVisiable(mTextPasswd, XF_VIEW_UNIT_VISIBALE_FALSE);
-        XF_ViewSetVisiable(mTextPasswd2, XF_VIEW_UNIT_VISIBALE_TRUE);
-        XF_ViewFocusUnit(mTextPasswd2);
+        XF_ViewSetVisiable((XF_VIEW_Unit*)mTextPasswd, XF_VIEW_UNIT_VISIBALE_FALSE);
+        XF_ViewSetVisiable((XF_VIEW_Unit*)mTextPasswd2, XF_VIEW_UNIT_VISIBALE_TRUE);
+        XF_ViewFocusUnit((XF_VIEW_Unit*)mTextPasswd2);
     }
     else if (XF_VIEW_TEXTEDIT_STATE_BREAK == state) {
         XF_ViewQuit();
@@ -34,9 +34,9 @@ static void onTextPasswd2StateChange(uint8 state, char *val) {
     }
     else if (XF_VIEW_TEXTEDIT_STATE_BREAK == state) {
         XF_VIEW_LabelSetValue(mLabelInfo, STRING_ADD_USER);
-        XF_ViewSetVisiable(mTextPasswd, XF_VIEW_UNIT_VISIBALE_TRUE);
-        XF_ViewSetVisiable(mTextPasswd2, XF_VIEW_UNIT_VISIBALE_FALSE);
-        XF_ViewFocusUnit(mTextPasswd);
+        XF_ViewSetVisiable((XF_VIEW_Unit*)mTextPasswd, XF_VIEW_UNIT_VISIBALE_TRUE);
+        XF_ViewSetVisiable((XF_VIEW_Unit*)mTextPasswd2, XF_VIEW_UNIT_VISIBALE_FALSE);
+        XF_ViewFocusUnit((XF_VIEW_Unit*)mTextPasswd);
     }
 }
 
@@ -53,11 +53,11 @@ static void onCreate(XF_VIEW_Layout *layout) {
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mTextPasswd);
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mTextPasswd2);
 
-    XF_ViewSetVisiable(mTextPasswd2, XF_VIEW_UNIT_VISIBALE_FALSE);
-    XF_ViewFocusUnit(mTextPasswd);
-}
+ }
 
 static void onShow(XF_VIEW_Layout *layout) {
+    XF_ViewSetVisiable((XF_VIEW_Unit*)mTextPasswd2, XF_VIEW_UNIT_VISIBALE_FALSE);
+    XF_ViewFocusUnit((XF_VIEW_Unit*)mTextPasswd);
 }
 
 static void onHide(XF_VIEW_Layout *layout) {
@@ -71,4 +71,4 @@ static void onDestroy(XF_VIEW_Layout *layout) {
     XF_VIEW_TextEditDelete(mTextPasswd2);
 }
 
-const XF_VIEW_Layout gLayoutAddCH = XF_VIEW_LAYOUT_INIT(5, onCreate, onShow, onHide, onDestroy, STRING_ADD_PWD);
+const XF_VIEW_Layout gLayoutAddCH = XF_VIEW_LAYOUT_STATIC_INIT(onCreate, onShow, onHide, onDestroy, STRING_ADD_PWD);

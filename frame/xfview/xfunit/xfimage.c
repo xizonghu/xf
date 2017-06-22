@@ -49,7 +49,7 @@ XF_VIEW_Image *XF_VIEW_ImageNew(attr x, attr y, uint8 *data, uint8 width, uint8 
 
     img->super.point.x = x;
     img->super.point.y = y;
-    img->super.type = XF_VIEW_UNIT_TYPE_IMAGE;
+    //img->super.type = XF_VIEW_UNIT_TYPE_IMAGE;
     img->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     img->super.onMessageReceiver = onMessageReceiver;
     img->data = data;

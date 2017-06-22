@@ -20,19 +20,23 @@ static void layout_clear() {
 /*static void layout_show(XF_VIEW_Layout *layout) {
 }*/
 
-static uint8 indexOf(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
-    uint8 pos = 0;
-    for (pos = 0; pos < layout->sizeUnit; pos++) {
-        XF_VIEW_Unit *unitTemp = layout->units[pos];
-        if (unitTemp == unit) break;
+static XF_VIEW_Unit *layout_get_unit(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
+    XF_VIEW_Unit *posUnit = XF_NULL;
+    if (XF_NULL == layout || XF_NULL == unit) return XF_NULL;
+    for (posUnit = layout->units; XF_NULL != posUnit; posUnit = posUnit->next) {
+        if (posUnit == unit) return posUnit;
     }
-
-    return pos;
+    return XF_NULL;
 }
 
-void XF_VIEW_LayoutShow(XF_VIEW_Layout *layout) {
-    //layout_clear();
-    //XF_VIEW_LayoutShowUnits(layout);
+static XF_VIEW_Unit *layout_get_unit_prev(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
+    XF_VIEW_Unit *prevUnit = XF_NULL;
+    if (XF_NULL == layout || XF_NULL == unit) return XF_NULL;
+    if (XF_NULL == layout->units) return XF_NULL;
+    for (prevUnit = layout->units; XF_NULL != prevUnit->next; prevUnit = prevUnit->next) {
+        if (prevUnit->next == unit) return prevUnit;
+    }
+    return XF_NULL;
 }
 
 void XF_VIEW_LayoutShowClear(XF_VIEW_Layout *layout) {
@@ -41,20 +45,12 @@ void XF_VIEW_LayoutShowClear(XF_VIEW_Layout *layout) {
 
 XF_VIEW_Layout *XF_VIEW_LayoutNew(XF_VIEW_Layout *base) {
     XF_VIEW_Layout *layout = XF_NULL;
-    XF_VIEW_Unit **units = XF_NULL;
 
     if (XF_NULL == (layout = (XF_VIEW_Layout *)XF_malloc(sizeof(XF_VIEW_Layout)))) return XF_NULL;
 
-    if (XF_NULL == (units = (XF_VIEW_Unit**)XF_malloc(sizeof(XF_VIEW_Unit)*base->sizeUnit))) {
-        XF_free(layout);
-        return XF_NULL;
-    }
-
     memcpy(layout, base, sizeof(XF_VIEW_Layout));
-    memset(units, 0, sizeof(XF_VIEW_Unit)*base->sizeUnit);
-    layout->units = units;
-    return layout;
 
+    return layout;
 }
 
 XF_VIEW_Layout *XF_VIEW_LayoutDuplicate(XF_VIEW_Layout *layout) {
@@ -69,27 +65,35 @@ XF_VIEW_Layout *XF_VIEW_LayoutDuplicate(XF_VIEW_Layout *layout) {
     //layoutDuplicate->posUnit = layout->posUnit;
     //layoutDuplicate->sizeUnit = layout->sizeUnit;
     //layoutDuplicate->units = layout->units;
-    memcpy(layoutDuplicate, layout, sizeof(XF_VIEW_Layout));
+    *layoutDuplicate = *layout;
 
     return layoutDuplicate;
 }
 
 void XF_VIEW_LayoutDelete(XF_VIEW_Layout *layout) {
-    XF_free(layout->units);
     XF_free(layout);
 }
 
 void XF_VIEW_LayoutAddUnit(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
-    uint8 pos = indexOf(layout, XF_NULL);
+    XF_VIEW_Unit *posUnit = XF_NULL;
 
-    if (layout->sizeUnit <= pos) return;
-    layout->units[pos] = unit;
+    if (XF_NULL == layout || XF_NULL == unit) return;
+    if (XF_NULL == layout->units) {
+        layout->units = unit;
+        unit->next = XF_NULL;
+        layout->focusUnit = layout->units;
+        return;
+    }
+
+    for (posUnit = layout->units; XF_NULL != posUnit->next; posUnit = posUnit->next);
+    posUnit->next = unit;
+    unit->next = XF_NULL;
 }
 
 void XF_VIEW_LayoutRemoveUnit(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
 }
 
-//不建议在除了xfview意外的地方使用unit的onMessageReceiver
+//不建议在除了xfview以外的地方使用unit的onMessageReceiver
 /*void XF_VIEW_LayoutShowUnits(XF_VIEW_Layout *layout) {
     uint8 pos = 0;
     XF_VIEW_Unit *unit = layout->units[pos];
@@ -121,45 +125,85 @@ XF_VIEW_Unit * XF_VIEW_LayoutFocusUnit(XF_VIEW_Layout *layout, XF_VIEW_Unit *uni
 
     if (XF_NULL == layout || XF_NULL == unit) return XF_NULL;
 
-    posUnitBak = layout->posUnit;
-    layout->posUnit = 0;
-    curr = layout->units[layout->posUnit];
+    if (curr = layout_get_unit(layout, unit)) layout->focusUnit = curr;
+    return curr;
+}
 
-    while (XF_NULL != curr) {
-        if (curr == unit) {
-            layout->posUnit = pos;
-            return curr;
-        }
-        curr = layout->units[++pos];
+XF_VIEW_Unit *XF_VIEW_LayoutGetHeadUnit(XF_VIEW_Layout *layout) {
+    if (XF_NULL == layout) return XF_NULL;
+
+    return layout->units;
+}
+
+XF_VIEW_Unit *XF_VIEW_LayoutGetPrevUnit(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
+    if (XF_NULL == layout || XF_NULL == unit) return XF_NULL;
+    return layout_get_unit_prev(layout, unit);
+}
+
+XF_VIEW_Unit *XF_VIEW_LayoutGetNextUnit(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
+    XF_VIEW_Unit *next = XF_NULL;
+    if (XF_NULL == layout || XF_NULL == unit) return XF_NULL;
+
+    if(XF_NULL == (next = layout_get_unit(layout, unit))) return XF_NULL;
+    return next->next;
+}
+
+XF_VIEW_Layout *XF_VIEW_LayoutCreate(XF_VIEW_Layout *base) {
+    XF_VIEW_Layout *layout = XF_NULL;
+    if (XF_NULL == (layout = XF_VIEW_LayoutDuplicate(base))) return XF_NULL;
+    if (layout->onCreate) layout->onCreate(layout);
+    return layout;
+}
+
+void XF_VIEW_LayoutShow(XF_VIEW_Layout *layout) {
+    if (XF_NULL == layout) return;
+    if (layout->onShow) layout->onShow(layout);
+}
+
+void XF_VIEW_LayoutHide(XF_VIEW_Layout *layout) {
+    if (XF_NULL == layout) return;
+    if (layout->onHide) layout->onHide(layout);
+}
+
+void XF_VIEW_LayoutDestroy(XF_VIEW_Layout *layout) {
+    if (XF_NULL == layout) return;
+    if (layout->onDestroy) layout->onDestroy(layout);
+
+    XF_VIEW_LayoutDelete(layout);
+}
+
+//以下为废弃历史函数
+/*XF_VIEW_Unit *XF_VIEW_LayoutFocusCurrUnit(XF_VIEW_Layout *layout) {
+    return layout->focusUnit;
+}*/
+
+/*XF_VIEW_Unit *XF_VIEW_LayoutFocusHeadUnit(XF_VIEW_Layout *layout) {
+    if (XF_NULL == layout) return XF_NULL;
+    return layout->units;
+}*/
+
+/*XF_VIEW_Unit *XF_VIEW_LayoutFocusPrevUnit(XF_VIEW_Layout *layout) {
+    XF_VIEW_Unit *prev = XF_NULL;
+    if (XF_NULL == layout) return XF_NULL;
+    if (prev = layout_get_uint_prev(layout, layout->focusUnit)) {
+        layout->focusUnit = prev;
+        return layout->focusUnit;
     }
 
-    layout->posUnit = posUnitBak;
     return XF_NULL;
-}
+}*/
 
-XF_VIEW_Unit *XF_VIEW_LayoutFocusHeadUnit(XF_VIEW_Layout *layout) {
-    if (XF_NULL == layout) return XF_NULL;
-    layout->posUnit = 0;
-    return layout->units[layout->posUnit];
-}
+/*XF_VIEW_Unit *XF_VIEW_LayoutFocusNextUnit(XF_VIEW_Layout *layout) {
+    XF_VIEW_Unit *next = XF_NULL;
+    if (XF_NULL == layout || XF_NULL == layout->focusUnit) return XF_NULL;
 
-XF_VIEW_Unit *XF_VIEW_LayoutFocusPrevUnit(XF_VIEW_Layout *layout) {
-    if (layout->posUnit <= 0) return XF_NULL;  //layout->units[0];
+    if (next = layout->focusUnit->next) {
+        layout->focusUnit = next;
+        return layout->focusUnit;
+    }
 
-    layout->posUnit--;
-    return layout->units[layout->posUnit];
-}
-
-XF_VIEW_Unit *XF_VIEW_LayoutFocusCurrUnit(XF_VIEW_Layout *layout) {
-    return layout->units[layout->posUnit];
-}
-
-XF_VIEW_Unit *XF_VIEW_LayoutFocusNextUnit(XF_VIEW_Layout *layout) {
-    if (layout->posUnit >= (layout->sizeUnit - 1))  return XF_NULL;  //layout->units[layout->sizeUnit - 1];
-
-    layout->posUnit++;
-    return layout->units[layout->posUnit];
-}
+    return XF_NULL;
+}*/
 
 /*XF_VIEW_Layout *XF_VIEW_LayoutFocusParent(XF_VIEW_Layout *layout) {
     if (XF_NULL == layout->parent) return XF_NULL;

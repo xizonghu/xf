@@ -49,7 +49,7 @@ static XF_VIEW_UnitMessageRes text_forward(XF_VIEW_TextEdit *text, char ch) {
     XF_TextoutPrint(&globalTextout, x + (len - 1)*globalTextout.fontChar->fontWidth, y, str, XF_BGRAPH_FILL_NORMAL);
     XF_BgraphFlush(&globalGraph);
 
-	//if(len >= text->size) return VIEW_RET_NEXT;
+	if(len >= text->size) return XF_VIEW_UNIT_MESSAGE_RES_NEXT;
 
 	return XF_VIEW_UNIT_MESSAGE_RES_OK;
 }
@@ -103,6 +103,7 @@ static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessag
                 }
                 default: {
                     *res = text_forward(text, msg->val);
+                    if (XF_VIEW_UNIT_MESSAGE_RES_NEXT == *res) if (text->onStateChange) text->onStateChange(XF_VIEW_TEXTEDIT_STATE_COMPLETE, text->val);
                 }
             }
             break;
@@ -122,7 +123,7 @@ XF_VIEW_TextEdit *XF_VIEW_TextEditNew(attr x, attr y, attr type, uint8 size, voi
 
     text->super.point.x = x;
     text->super.point.y = y;
-    text->super.type = XF_VIEW_UNIT_TYPE_TEXTEDIT;
+    //text->super.type = XF_VIEW_UNIT_TYPE_TEXTEDIT;
     text->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     text->super.onMessageReceiver = onMessageReceiver;
     text->val = val;

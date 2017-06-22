@@ -5,7 +5,7 @@
 #include "xfunit/xflayout.h"
 #include "xfunit/xflabel.h"
 #include "xfunit/xftextedit.h"
-#include "xfunit/xftrigger.h"
+#include "xfview.h"
 
 #include "layout_query_trace.h"
 
@@ -16,7 +16,7 @@ static void onCreate(XF_VIEW_Layout *layout) {
 
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mLabelTopBar);
 
-    XF_ViewFocusUnit(mLabelTopBar);
+    XF_ViewFocusUnit((XF_VIEW_Unit*)mLabelTopBar);
 }
 
 static void onShow(XF_VIEW_Layout *layout) {

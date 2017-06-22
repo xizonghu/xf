@@ -12,6 +12,7 @@
 
 #include "layout_manage.h"
 #include "layout_unlock.h"
+#include "layout_welcome.h"
 #include "layout_main.h"
 
 static void view_click_handler(XF_EventInfo *info);
@@ -32,7 +33,6 @@ XF_Event EventKB = {
     sizeof(HandlerKB) / sizeof(HandlerKB[0]),
 };
 XF_EventHandler ViewHandler = {
-    "view click",
     view_click_handler,
 };
 
@@ -51,7 +51,8 @@ void xfview_test_main() {
     //XF_ViewStart(&gLayout2);  //显示界面
     //XF_ViewStart(&gLayoutImage);  //显示界面
     //XF_ViewStart(&gLayoutManage);
-    XF_ViewStart(&gLayoutUnlock);
+    //XF_ViewStart(&gLayoutUnlock);
+    XF_ViewMain(&gLayoutWelcome);
     while (1) XF_EventPolling(&EventKB);
 }
 

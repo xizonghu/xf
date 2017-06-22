@@ -23,7 +23,7 @@ static void onCreate(XF_VIEW_Layout *layout) {
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mLabelTopBar);
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mButton);
 
-    XF_ViewFocusUnit(mButton);
+    XF_ViewFocusUnit((XF_VIEW_Unit*)mButton);
 }
 
 static void onShow(XF_VIEW_Layout *layout) {

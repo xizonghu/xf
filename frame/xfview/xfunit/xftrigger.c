@@ -37,7 +37,7 @@ XF_VIEW_Trigger *XF_VIEW_TriggerNew(attr x, attr y, void (*onTrigger)(void *arg)
 
     trigger->super.point.x = x;
     trigger->super.point.y = y;
-    trigger->super.type = XF_VIEW_UNIT_TYPE_TRIGGER;
+    //trigger->super.type = XF_VIEW_UNIT_TYPE_TRIGGER;
     trigger->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     trigger->super.onMessageReceiver = onMessageReceiver;
     trigger->onTrigger = onTrigger;

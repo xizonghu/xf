@@ -169,7 +169,7 @@ XF_VIEW_ListTree *XF_VIEW_ListTreeNew(attr x, attr y, XF_VIEW_ListTreeUnit *root
 
     list->super.point.x = x;
     list->super.point.y = y;
-    list->super.type = XF_VIEW_UNIT_TYPE_LISTTREE;
+    //list->super.type = XF_VIEW_UNIT_TYPE_LISTTREE;
     list->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     list->super.onMessageReceiver = onMessageReceiver;
     list->root = root;

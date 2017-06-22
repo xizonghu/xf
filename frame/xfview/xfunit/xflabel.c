@@ -39,6 +39,15 @@ static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessag
             XF_VIEW_LabelDelete(label);
             break;
         }
+        case XF_VIEW_UNIT_MESSAGE_TYPE_CONTROL: {
+            switch (msg->val) {
+                case XF_VIEW_UNIT_KEY_BACK: {
+                    *res = XF_VIEW_UNIT_MESSAGE_RES_QUIT;
+                    break;
+                }
+            }
+            break;
+        }
     }
 }
 
@@ -49,7 +58,7 @@ XF_VIEW_Label *XF_VIEW_LabelNew(attr x, attr y, const char *val) {
 
     label->super.point.x = x;
     label->super.point.y = y;
-    label->super.type = XF_VIEW_UNIT_TYPE_LABEL;
+    //label->super.type = XF_VIEW_UNIT_TYPE_LABEL;
     label->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     label->super.onMessageReceiver = onMessageReceiver;
     label->val = (char*)val;

@@ -6,6 +6,7 @@
 #include "xfunit/xflayout.h"
 #include "xfunit/xflabel.h"
 #include "xfunit/xflisttree.h"
+#include "xfview.h"
 
 #include "layout_storage.h"
 #include "layout_add_user.h"

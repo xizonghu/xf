@@ -73,8 +73,9 @@ typedef struct XF_VIEW_POINT_S {
 typedef struct XF_VIEW_UNIT_S {
     XF_VIEW_Point point;
     attr visible;
-    attr type;
+    //attr type;
     void (*onMessageReceiver)(uint8 *res, struct XF_VIEW_UNIT_S *unit, XF_VIEW_UnitMessage *msg);
+    struct XF_VIEW_UNIT_S *next;
 } XF_VIEW_Unit;
 
 #endif

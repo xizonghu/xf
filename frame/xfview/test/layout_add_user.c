@@ -5,6 +5,7 @@
 #include "xfunit/xflayout.h"
 #include "xfunit/xflabel.h"
 #include "xfunit/xftrigger.h"
+#include "xfview.h"
 
 #include "layout_add_user.h"
 

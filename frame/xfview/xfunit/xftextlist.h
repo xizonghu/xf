@@ -12,6 +12,7 @@ typedef enum XF_VIEW_TEXTLIST_EVENT_TYPE_E {
 
 typedef struct XF_VIEW_TEXTLIST_EVENT_S {
     attr type;
+    attr pos;
     void *arg;
 } XF_VIEW_TextListEvent;
 

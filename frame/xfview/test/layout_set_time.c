@@ -21,7 +21,7 @@ static XF_VIEW_TextEdit *mTextMinute;
 
 static void onTextYearStateChange(uint8 state, char *val) {
     if (XF_VIEW_TEXTEDIT_STATE_COMPLETE == state) {
-        XF_ViewFocusUnit(mTextMonth);
+        XF_ViewFocusUnit((XF_VIEW_Unit*)mTextMonth);
     }
     else if (XF_VIEW_TEXTEDIT_STATE_BREAK == state) {
         XF_ViewQuit();
@@ -30,28 +30,28 @@ static void onTextYearStateChange(uint8 state, char *val) {
 
 static void onTextMonthStateChange(uint8 state, char *val) {
     if (XF_VIEW_TEXTEDIT_STATE_COMPLETE == state) {
-        XF_ViewFocusUnit(mTextDay);
+        XF_ViewFocusUnit((XF_VIEW_Unit*)mTextDay);
     }
     else if (XF_VIEW_TEXTEDIT_STATE_BREAK == state) {
-        XF_ViewFocusUnit(mTextYear);
+        XF_ViewFocusUnit((XF_VIEW_Unit*)mTextYear);
     }
 }
 
 static void onTextDayStateChange(uint8 state, char *val) {
     if (XF_VIEW_TEXTEDIT_STATE_COMPLETE == state) {
-        XF_ViewFocusUnit(mTextHour);
+        XF_ViewFocusUnit((XF_VIEW_Unit*)mTextHour);
     }
     else if (XF_VIEW_TEXTEDIT_STATE_BREAK == state) {
-        XF_ViewFocusUnit(mTextMonth);
+        XF_ViewFocusUnit((XF_VIEW_Unit*)mTextMonth);
     }
 }
 
 static void onTextHourStateChange(uint8 state, char *val) {
     if (XF_VIEW_TEXTEDIT_STATE_COMPLETE == state) {
-        XF_ViewFocusUnit(mTextMinute);
+        XF_ViewFocusUnit((XF_VIEW_Unit*)mTextMinute);
     }
     else if (XF_VIEW_TEXTEDIT_STATE_BREAK == state) {
-        XF_ViewFocusUnit(mTextDay);
+        XF_ViewFocusUnit((XF_VIEW_Unit*)mTextDay);
     }
 }
 
@@ -60,7 +60,7 @@ static void onTextMinuteStateChange(uint8 state, char *val) {
         XF_ViewQuit();
     }
     else if (XF_VIEW_TEXTEDIT_STATE_BREAK == state) {
-        XF_ViewFocusUnit(mTextHour);
+        XF_ViewFocusUnit((XF_VIEW_Unit*)mTextHour);
     }
 }
 
@@ -83,7 +83,7 @@ static void onCreate(XF_VIEW_Layout *layout) {
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mTextHour);
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mTextMinute);
 
-    XF_ViewFocusUnit(mTextYear);
+    XF_ViewFocusUnit((XF_VIEW_Unit*)mTextYear);
 }
 
 static void onShow(XF_VIEW_Layout *layout) {

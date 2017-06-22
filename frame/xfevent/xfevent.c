@@ -38,7 +38,8 @@ int8 XF_EventRemoveHandler(XF_Event *evt, XF_EventHandler *handler) {
     if (XF_NULL == evt || XF_NULL == handler) return -1;
     if (XF_NULL == evt->HeadHandler) return -2;
     if (evt->HeadHandler == handler) {
-        evt->HeadHandler = XF_NULL;
+        evt->HeadHandler = evt->HeadHandler->next;
+        handler->next = XF_NULL;
         return 0;
     }
 
@@ -110,6 +111,29 @@ void XF_EventPollerAdd(XF_EventPoller *head, XF_EventPoller *poller) {
     for (prev = head; XF_NULL != prev->next; prev = prev->next);
     prev->next = poller;
     poller->next = XF_NULL;
+}
+
+int8 XF_EventPollerRemove(XF_EventPoller *head, XF_EventPoller *poller) {
+    XF_EventPoller *prev = XF_NULL;
+
+    if (XF_NULL == head || XF_NULL == poller) return -1;
+
+    if (head == poller) {
+        head = head->next;
+        poller->next = XF_NULL;
+        return 0;
+    }
+
+    for (prev = head; prev->next != XF_NULL && prev->next != poller; prev = prev->next);
+    if (XF_NULL == prev->next) return -2;
+
+    if (poller == prev->next) {
+        prev->next = prev->next->next;
+        poller->next = XF_NULL;
+        return 0;
+    }
+
+    return 0;
 }
 
 void XF_EventPollerPoll(XF_EventPoller *poller) {

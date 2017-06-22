@@ -1,3 +1,4 @@
+#include "string.h"
 #include "xftypedef.h"
 
 #include "language.h"
@@ -5,6 +6,7 @@
 #include "xfunit/xflayout.h"
 #include "xfunit/xflabel.h"
 #include "xfunit/xflist.h"
+#include "xfview.h"
 
 #include "layout_set_type_unlock.h"
 
@@ -41,7 +43,7 @@ static void onCreate(XF_VIEW_Layout *layout) {
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mLabelTopBar);
     XF_VIEW_LayoutAddUnit(layout, (XF_VIEW_Unit*)mListType);
 
-    XF_ViewFocusUnit(mListType);
+    XF_ViewFocusUnit((XF_VIEW_Unit*)mListType);
 }
 
 static void onShow(XF_VIEW_Layout *layout) {
@@ -52,7 +54,7 @@ static void onHide(XF_VIEW_Layout *layout) {
 
 static void onDestroy(XF_VIEW_Layout *layout) {
     XF_VIEW_LabelDelete(mLabelTopBar);
-    XF_VIEW_LabelDelete(mListType);
+    XF_VIEW_ListDelete(mListType);
 }
 
 const XF_VIEW_Layout gLayoutSetTypeUnlock = XF_VIEW_LAYOUT_INIT(2, onCreate, onShow, onHide, onDestroy, STRING_SET_TYPE_UNLOCK);
