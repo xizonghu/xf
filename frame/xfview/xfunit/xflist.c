@@ -72,9 +72,6 @@ static void tt_show(XF_VIEW_List *tt) {
     XF_BgraphFlush(&globalGraph);
 }
 
-/*static void list_delete(XF_VIEW_ListTree *list) {
-}*/
-
 static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessage *msg) {
     XF_VIEW_List *tt = (XF_VIEW_List*)unit;
     *res = XF_VIEW_UNIT_MESSAGE_RES_OK;
@@ -144,6 +141,20 @@ XF_VIEW_List *XF_VIEW_ListNew(attr x, attr y, attr sizeCursor, void (*onSelect)(
 }
 
 void XF_VIEW_ListDelete(XF_VIEW_List *tt) {
+    XF_VIEW_ListUnit *nextUnit = XF_NULL;
+    XF_VIEW_ListUnit *currUnit = XF_NULL;
+
+    if (XF_NULL == tt) return;
+    if (XF_NULL != tt->head) {
+        currUnit = tt->head;
+        nextUnit = tt->head->next;
+        while (XF_NULL != currUnit) {
+            XF_VIEW_ListUnitDelete(currUnit);
+            currUnit = nextUnit;
+            nextUnit = nextUnit->next;
+        }
+    }
+
     XF_free(tt);
 }
 

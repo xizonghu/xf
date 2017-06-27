@@ -84,12 +84,14 @@ void XF_EventListAddEvent(XF_EventList *list, XF_Event *evt) {
     XF_Event *head = XF_NULL;
 
     if (XF_NULL == list || XF_NULL == evt) return;
+    if (evt == list->head) return;
+
     if (XF_NULL == list->head) {
         list->head = evt;
         evt->next = XF_NULL;
     }
 
-    for (head = list->head; XF_NULL != head->next; head = head->next);
+    for (head = list->head; XF_NULL != head->next; head = head->next) if (head->next == evt) return;
 
     head->next = evt;
     evt->next = XF_NULL;
@@ -107,8 +109,9 @@ void XF_EventListPolling(XF_EventList *list) {
 void XF_EventPollerAdd(XF_EventPoller *head, XF_EventPoller *poller) {
     XF_EventPoller *prev = XF_NULL;
     if (XF_NULL == head || XF_NULL == poller) return;
+    if (poller == head) return;
 
-    for (prev = head; XF_NULL != prev->next; prev = prev->next);
+    for (prev = head; XF_NULL != prev->next; prev = prev->next) if (prev->next == poller) return;
     prev->next = poller;
     poller->next = XF_NULL;
 }

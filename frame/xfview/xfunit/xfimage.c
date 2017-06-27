@@ -61,3 +61,8 @@ XF_VIEW_Image *XF_VIEW_ImageNew(attr x, attr y, uint8 *data, uint8 width, uint8 
 void XF_VIEW_ImageDelete(XF_VIEW_Image* img) {
     XF_free(img);
 }
+
+void XF_VIEW_ImageSetData(XF_VIEW_Image *img, uint8 *data) {
+    img->data = data;
+    image_show(img);
+}

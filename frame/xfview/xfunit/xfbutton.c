@@ -80,6 +80,12 @@ static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessag
     }
 }
 
+void XF_VIEW_ButtonSetName(XF_VIEW_Button *button, char *name) {
+    button->name = name;
+    button_show(button);
+}
+
+
 XF_VIEW_Button *XF_VIEW_ButtonNew(attr x, attr y, const char *name, void (*onClick)(void *arg)) {
     XF_VIEW_Button *button = (XF_VIEW_Button*)XF_malloc(sizeof(XF_VIEW_Button));
 

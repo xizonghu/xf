@@ -102,7 +102,6 @@ XF_VIEW_DataTable *XF_VIEW_DataTableNew(attr x, attr y, XF_VIEW_DataTableUnit *l
 
     dt->super.point.x = x;
     dt->super.point.y = y;
-    dt->super.type = XF_VIEW_UNIT_TYPE_DATATABLE;
     dt->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     dt->super.onMessageReceiver = onMessageReceiver;
     dt->listUnit = listUnit;

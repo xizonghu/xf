@@ -30,7 +30,7 @@ static void XF_ViewFocusLayout(XF_VIEW_Layout *layout) {
 static void XF_ViewShow(XF_VIEW_Layout *layout) {
     XF_ViewShowLayout(layout);
     XF_VIEW_LayoutShow(layout);
-    XF_ViewFocusLayout(layout);
+    //XF_ViewFocusLayout(layout);
 }
 
 static void view_process_msg(XF_VIEW_Unit *unit, XF_VIEW_UnitMessage *msg) {
@@ -171,9 +171,10 @@ void XF_ViewFocusUnit(XF_VIEW_Unit *unit) {
 
 void XF_ViewSetVisiable(XF_VIEW_Unit *unit, uint8 visiable) {
     uint8 res = XF_VIEW_UNIT_MESSAGE_RES_SIZE;
-    XF_VIEW_UnitMessage msg = {XF_VIEW_UNIT_MESSAGE_TYPE_SHOW, 0};
+    XF_VIEW_UnitMessage msg = {XF_VIEW_UNIT_MESSAGE_TYPE_VISIABLE, 0};
     if (XF_NULL == unit) return;
 
+    msg.val = visiable;
     unit->visible = visiable;
     if (unit->onMessageReceiver) unit->onMessageReceiver(&res, unit, &msg);
 }

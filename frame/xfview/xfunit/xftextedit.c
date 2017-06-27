@@ -60,6 +60,11 @@ static XF_VIEW_UnitMessageRes text_forward(XF_VIEW_TextEdit *text, char ch) {
 /*static void text_destroy(XF_VIEW_TextEdit *text) {
 }*/
 
+static void text_clear(XF_VIEW_TextEdit *text) {
+    char strNull[] = "                ";
+    strNull[text->size] = '\0';
+    XF_TextoutPrint(&globalTextout, text->super.point.x, text->super.point.y, strNull, XF_BGRAPH_FILL_NORMAL);
+}
 
 static void text_show(XF_VIEW_TextEdit *text) {
     char strNull[] = "________________";
@@ -84,6 +89,11 @@ static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessag
         }
         case XF_VIEW_UNIT_MESSAGE_TYPE_DELETE: {
             XF_VIEW_TextEditDelete(text);
+            break;
+        }
+        case XF_VIEW_UNIT_MESSAGE_TYPE_VISIABLE: {
+            if (XF_VIEW_UNIT_VISIBALE_FALSE ==  msg->val) text_clear(text);
+            else text_show(text);
             break;
         }
         case XF_VIEW_UNIT_MESSAGE_TYPE_CONTROL: {
@@ -126,6 +136,7 @@ XF_VIEW_TextEdit *XF_VIEW_TextEditNew(attr x, attr y, attr type, uint8 size, voi
     //text->super.type = XF_VIEW_UNIT_TYPE_TEXTEDIT;
     text->super.visible = XF_VIEW_UNIT_VISIBALE_TRUE;
     text->super.onMessageReceiver = onMessageReceiver;
+    text->type = type;
     text->val = val;
     text->pos = 0;
     text->size = size;

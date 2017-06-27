@@ -7,6 +7,8 @@
 #define BUTTON_NEW(x, y, data, func)                     {UNIT_NEW(x, y, VIEW_TYPE_BUTTON, data), func}
 #define TEXT_NEW(x, y, type, data)                       {UNIT_NEW(x, y, VIEW_TYPE_TEXT, data), type, sizeof(data) - 1, 0}
 
+#define XF_VIEW_UNIT_STATIC_INIT_PARM_3(x,y,onReceiver) {{x,y},XF_VIEW_UNIT_VISIBALE_TRUE,onReceiver,XF_NULL};
+
 #define XF_VIEW_UNIT_KEY_UP           '2'   //KEY_PREV
 #define XF_VIEW_UNIT_KEY_DOWN         '8'   //KEY_NEXT
 #define XF_VIEW_UNIT_KEY_ENTER        '#'
@@ -44,6 +46,7 @@ typedef enum XF_VIEW_UNIT_MESSAGE_TYPE_S {
     XF_VIEW_UNIT_MESSAGE_TYPE_SHOW,             //ÏÔÊ¾
     XF_VIEW_UNIT_MESSAGE_TYPE_DELETE,
     XF_VIEW_UNIT_MESSAGE_TYPE_CONTROL,          //°´¼ü
+    XF_VIEW_UNIT_MESSAGE_TYPE_VISIABLE,
 } XF_VIEW_UnitMessageType;
 
 typedef enum XF_VIEW_UNIT_MESSAGE_RES_E {
