@@ -68,6 +68,9 @@ static void text_clear(XF_VIEW_TextEdit *text) {
 
 static void text_show(XF_VIEW_TextEdit *text) {
     char strNull[] = "________________";
+
+    //if (XF_VIEW_TEXTEDIT_TYPE_PASSWD == text->type) memset(strNull, ' ', sizeof(strNull) -1);
+
     *(text->val + 0) = '\0';
     strNull[text->size] = '\0';
     XF_TextoutPrint(&globalTextout, text->super.point.x, text->super.point.y, strNull, XF_BGRAPH_FILL_NORMAL);

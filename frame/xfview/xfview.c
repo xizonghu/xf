@@ -190,7 +190,7 @@ void XF_ViewHide() {
 
 void XF_ViewFinish() {
     while (mViewLayout) {
-        XF_ViewQuit();
+        XF_ViewDestroy();
     }
 }
 

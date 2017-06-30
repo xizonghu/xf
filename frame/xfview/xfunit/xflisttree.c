@@ -113,22 +113,19 @@ static void onMessageReceiver(uint8 *res, XF_VIEW_Unit *unit, XF_VIEW_UnitMessag
             switch (msg->val) {
                 case XF_VIEW_UNIT_KEY_UP: {
                     //检查数据首
-                    if(0 == head->pos && 0 == list->posCursor) break;
+                    if (0 == head->pos && 0 == list->posCursor) break;
                     //检查显示首
-                    if(0 == list->posCursor) head->pos--;
+                    if (0 == list->posCursor) head->pos--;
                     else list->posCursor--;
                     list_show(list);
                     break;
                 }
                 case XF_VIEW_UNIT_KEY_DOWN: {
                     //检查数据尾
-                    if(XF_NULL == curr) break;
-                    
+                    if (XF_NULL == curr) break;
+                    if (XF_NULL == listunit_get_child_by_pos(head, head->pos + list->posCursor + 1)) break;
                     //检查显示尾
-                    if((list->sizeCursor - 1) == list->posCursor) {
-                        if (XF_NULL == listunit_get_child_by_pos(head, head->pos + list->sizeCursor)) break;
-                        head->pos++;
-                    }
+                    if((list->sizeCursor - 1) == list->posCursor) head->pos++;
                     else list->posCursor++;
                     list_show(list);
                     break;

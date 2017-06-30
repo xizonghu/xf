@@ -22,7 +22,7 @@ XF_Bgraph globalGraph = {
     0,
 };*/
 
-XF_Bgraph globalGraph = {0};
+//XF_Bgraph globalGraph = {0};
 
 /*static void write_font(XF_Bgraph *bg, uint8 x, uint8 y, uint8 const *bits, uint8 h) {
     uint32 *fb = &mfb[y][x >> XF_BGRAPH_CELL_OFFSET];  //将x转为fb位置 (x >> 5) = (x / 32)
@@ -78,6 +78,7 @@ void XF_BgraphDraw_H(XF_Bgraph *bg, uint8 x, uint8 y, uint8 *data, uint8 width, 
     }
 }*/
 
+//在坐标(x,y)处，写8个像素点
 static void write_fb_VH(XF_Bgraph *bg, uint8 x, uint8 y, uint8 dat) {
     uint8 *pfb1, *pfb2; //因为fb以8个像素对齐到一个字节的方式存储数据，所以要写一个字节的数据可能涉及fb的两个地址
     uint8 mask = y % LCD_PIXEL_CELL;
