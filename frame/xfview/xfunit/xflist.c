@@ -21,7 +21,7 @@ static XF_VIEW_ListUnit *tt_get_unit(XF_VIEW_List *tt, attr pos) {
     XF_VIEW_ListUnit *posUnit = XF_NULL;
     uint8 posTemp = 0;
 
-    if (0 > pos) return XF_NULL;
+    //if (0 > pos) return XF_NULL;
 
     if (XF_NULL == tt || XF_NULL == tt->head) return XF_NULL;
 

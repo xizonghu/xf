@@ -63,7 +63,7 @@ void XF_IOReaderPoll(XF_IOReader *reader) {
     if(XF_NULL == reader->IF || XF_NULL == reader->CB) return;
 
     //读数据
-    if (0 >= (size = reader->IF->readData(reader->fd, (uint8*)reader->buffer + reader->posBuffer, reader->sizeBuffer - reader->posBuffer))) {
+    if (0 >= (size = reader->IF->readData(reader->fd, (char*)reader->buffer + reader->posBuffer, reader->sizeBuffer - reader->posBuffer))) {
         //检查超时
         if (XF_IOREADER_STATE_PORTION == reader->state && reader->IF->isTimeout()) {
             resetIOReader(reader);

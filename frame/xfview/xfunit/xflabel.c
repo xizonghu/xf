@@ -1,3 +1,5 @@
+#include "string.h"
+
 #include "xftypedef.h"
 #include "xfbgraph.h"
 #include "xftextout.h"

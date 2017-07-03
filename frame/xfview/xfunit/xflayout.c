@@ -119,8 +119,6 @@ void XF_VIEW_LayoutRemoveUnit(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
 }*/
 
 XF_VIEW_Unit * XF_VIEW_LayoutFocusUnit(XF_VIEW_Layout *layout, XF_VIEW_Unit *unit) {
-    uint8 pos = 0;
-    uint8 posUnitBak = 0;
     XF_VIEW_Unit *curr = XF_NULL;
 
     if (XF_NULL == layout || XF_NULL == unit) return XF_NULL;
