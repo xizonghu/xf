@@ -29,7 +29,7 @@ static const XF_HttpdFsIf *mFsIf;
 static const XF_HttpdJsonIf *mJsonIf;
 
 static void not_found(int client) {
-    char buf[50];
+    char buf[64];
  
     mSockIf->send(client, HEADER_RESPONSE_404, SIZEOFSTR(HEADER_RESPONSE_404));
     mSockIf->send(client, HEADER_CONTENT_TYPE_TEXT_HTML, SIZEOFSTR(HEADER_CONTENT_TYPE_TEXT_HTML));
@@ -43,7 +43,7 @@ static void unimplemented(XF_HttpSock client) {
 }
 
 static unsigned int get_file_length(const char *filename) {
-    char buf[1024];
+    char buf[256];
     unsigned int size = 0, sum = 0;
     int resource = 0;
 
@@ -60,7 +60,7 @@ static unsigned int get_file_length(const char *filename) {
 }
 
 static void response_header_file(int client, const char *filename) {
-    char buf[40];
+    char buf[64];
 	unsigned int size = 0;
 
     if(0 == (size = get_file_length(filename))) {
@@ -87,7 +87,7 @@ static void response_header_json(int client, void *json) {
 }
 
 static void cat(int client, int resource) {
-    char buf[1024];
+    char buf[256];
     unsigned int size = 0;
 
     do {
@@ -122,11 +122,11 @@ void XF_HttpdInit(const void *webroot, const XF_HttpdSockIf *sockIf, const XF_Ht
 
 void XF_HttpdAcceptRequest(XF_HttpSock client) {
     char buf[1024];
-    char result[1024];
+    char result[512];
     int numchars;
-    char method[255];
-    char url[255];
-    char path[512];
+    char method[20];
+    char url[64];
+    char path[64];
     int fileFd;
     unsigned int pos = 0, i = 0;
     int cgi = 0;
@@ -159,7 +159,8 @@ void XF_HttpdAcceptRequest(XF_HttpSock client) {
     }
     else if (strcasecmp(method, "POST") == 0) {
         if(postContent = (char *)strstr(buf, "\r\n\r\n")) {
-            sizePostContent = postContent - buf - 4;
+            postContent += 4;//strlen("\r\n\r\n");
+            sizePostContent = numchars - (postContent - buf);
             cgi = 1;
         }
     }
@@ -175,7 +176,7 @@ void XF_HttpdAcceptRequest(XF_HttpSock client) {
         response_file(client, path);
     }
     else {
-        mJsonIf->execute(result, postContent, sizePostContent);
+        mJsonIf->execute(result, sizeof(result), postContent, sizePostContent);
 		response_header_json(client, result);
         response_json(client, result);
     }

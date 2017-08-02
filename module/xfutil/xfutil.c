@@ -6,13 +6,13 @@
 
 //uint16 XF_ByteToHex(void *str, const void *b, uint16 size) {
 //(void)的大小未知，所以不能使用str++，故换为(uint8*)，不能使用(uint16*)，str++会移动2个byte
-uint16 XF_ByteToHex(uint8 *str, const uint8 *b, uint16 size) {
-	uint8 *src = str;
+uint16 XF_ByteToHexString(char *str, char *b, uint16 size) {
+	char *src = str;
 
     while(size-- > 0) {
         *(str++) = HEXSTR(*b >> 4);  //*(b++) / 16
         *(str++) = HEXSTR(*b & 0x0F);  //*(b++) % 16
-        *(str++) = ' ';
+        //*(str++) = ' ';
 		b++;
     }
     *(str++) = '\0';

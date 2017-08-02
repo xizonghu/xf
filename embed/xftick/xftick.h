@@ -6,6 +6,6 @@
 typedef uint16 XF_Tick;
 
 extern void XF_TickInit();
-extern XF_Tick XF_TickCount(); 
+extern XF_Tick XF_TickGetValue(); 
 
 #endif
