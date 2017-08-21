@@ -135,7 +135,7 @@ void XF_HttpdAcceptRequest(XF_HttpSock client) {
     int sizePostContent = 0;
 
 	if(XF_HTTPD_STATE_NONE == mState) return;
-    numchars = mSockIf->recv(client, buf, sizeof(buf));
+    if (0 >= (numchars = mSockIf->recv(client, buf, sizeof(buf)))) return;
     buf[numchars] = '\0';
 
     for(pos = 0; (' ' != buf[pos]) && (pos < sizeof(buf) - 1) && (pos < sizeof(method) - 1); pos++) {
@@ -181,6 +181,6 @@ void XF_HttpdAcceptRequest(XF_HttpSock client) {
         response_json(client, result);
     }
 
-    mSockIf->close(client);
+    //mSockIf->close(client);
 }
 
